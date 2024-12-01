@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StoreManagement.WebApi.Context;
 using StoreManagement.WebApi.DependencyInjection;
 
 namespace StoreManagement.WebApi
@@ -7,7 +9,10 @@ namespace StoreManagement.WebApi
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDatabaseInjection(configuration);
+            // Configure DbContext with PostgreSQL connection
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
 
             services.AddApiVersioning(config =>
