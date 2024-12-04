@@ -30,13 +30,13 @@ namespace StoreManagement.WebApi
             //services.AddQueries();
             //services.AddRepositories();
             //services.AddHandles();
-            //services.AddMemoryCache();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //app.UseMiddleware<Middleware>();
             app.UseRouting();
+            app.UseAuthorization();
 
             if (env.IsDevelopment())
             {

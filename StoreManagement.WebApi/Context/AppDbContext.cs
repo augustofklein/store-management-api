@@ -2,7 +2,5 @@
 
 namespace StoreManagement.WebApi.Context
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
-    {
-    }
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options) { }
 }
