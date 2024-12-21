@@ -26,7 +26,7 @@ namespace StoreManagement.WebApi
             services.AddEndpointsApiExplorer();
 
             services.AddMediatorInjection();
-            //services.AddServices();
+            services.AddServices();
             //services.AddQueries();
             //services.AddRepositories();
             //services.AddHandles();
