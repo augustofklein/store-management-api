@@ -11,7 +11,7 @@ namespace StoreManagement.WebApi.Controllers
         private readonly IMediator _mediator = mediator;
 
         [MapToApiVersion("1")]
-        [HttpPost("all")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
         {
             return Ok();
