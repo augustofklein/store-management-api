@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace StoreManagement.WebApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("v{version:ApiVersion}/[controller]")]
     public class ProductController(IMediator mediator) : ControllerBase
     {

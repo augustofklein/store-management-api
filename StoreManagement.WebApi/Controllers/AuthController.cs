@@ -20,9 +20,9 @@ namespace StoreManagement.WebApi.Controllers
             var response = await _mediator.Send(command, cancellationToken);
 
             if(response.IsFailure)
-                return BadRequest();
+                return BadRequest(response.Error);
 
-            return Ok();
+            return Ok(response);
         }
     }
 }
