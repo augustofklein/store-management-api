@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StoreManagement.WebApi.Context;
+using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.WebApi.DependencyInjection;
 
 namespace StoreManagement.WebApi
@@ -27,9 +27,9 @@ namespace StoreManagement.WebApi
 
             services.AddMediatorInjection();
             services.AddServices();
+            services.AddHandles();
             //services.AddQueries();
             //services.AddRepositories();
-            //services.AddHandles();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
