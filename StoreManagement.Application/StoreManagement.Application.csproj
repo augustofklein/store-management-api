@@ -14,4 +14,8 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjectionFixed" Version="5.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StoreManagement.Infrastructure\StoreManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

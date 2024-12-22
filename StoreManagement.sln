@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6D9092F9-B581-46CC-B9A8-8F973C7A716A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreManagement.Application", "StoreManagement.Application\StoreManagement.Application.csproj", "{8ABDA09D-D770-4722-8F6B-47FD6E73BDEB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9E8C0BCE-AD9D-481A-A7D6-C5F9132994F9} = {9E8C0BCE-AD9D-481A-A7D6-C5F9132994F9}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreManagement.WebApi", "StoreManagement.WebApi\StoreManagement.WebApi.csproj", "{1CFE1106-6640-4372-B8F9-99AE9EFD96DD}"
 	ProjectSection(ProjectDependencies) = postProject
