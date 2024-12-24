@@ -22,7 +22,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok(response);
+            return Ok(new { Token = response.Value });
         }
     }
 }

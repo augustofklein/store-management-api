@@ -8,6 +8,7 @@ namespace StoreManagement.WebApi.DependencyInjection
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IJwtService, JwtService>();
 
             return services;
         }

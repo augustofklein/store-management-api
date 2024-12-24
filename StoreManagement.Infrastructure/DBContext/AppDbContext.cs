@@ -6,7 +6,7 @@ namespace StoreManagement.Infrastructure.DBContext
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public DbSet<UserEntity> User { get; set; }
+        public required DbSet<UserEntity> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

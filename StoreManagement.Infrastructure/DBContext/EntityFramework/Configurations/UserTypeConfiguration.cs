@@ -9,8 +9,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("user").HasKey(user => user.Id);
+            builder.ToTable("users").HasKey(user => new { user.Id });
 
+            builder.Property(user => user.Id).HasColumnName("id").HasColumnType("serial");
             builder.Property(user => user.Username).HasColumnName("username").HasColumnType("varchar(50)");
             builder.Property(user => user.Password).HasColumnName("password").HasColumnType("text");
         }

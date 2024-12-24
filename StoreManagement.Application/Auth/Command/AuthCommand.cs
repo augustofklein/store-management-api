@@ -3,7 +3,7 @@ using MediatR;
 
 namespace StoreManagement.Application.Auth.Command
 {
-    public class AuthCommand(string username, string password) : IRequest<Result>
+    public class AuthCommand(string username, string password) : IRequest<Result<string>>
     {
         public string Username { get; set; } = username;
         public string Password { get; set; } = password;
