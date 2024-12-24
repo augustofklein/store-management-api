@@ -18,7 +18,7 @@ namespace StoreManagement.Application.Auth.Service
                 return Result.Failure("Invalid username or password.");
             }
 
-            if (BCrypt.Net.BCrypt.Verify(password, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 return Result.Failure("Invalid username or password.");
             }

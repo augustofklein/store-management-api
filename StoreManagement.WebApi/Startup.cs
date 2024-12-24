@@ -12,7 +12,6 @@ namespace StoreManagement.WebApi
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configure DbContext with PostgreSQL connection
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
@@ -46,8 +45,6 @@ namespace StoreManagement.WebApi
             services.AddMediatorInjection();
             services.AddServices();
             services.AddHandles();
-            //services.AddQueries();
-            //services.AddRepositories();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
