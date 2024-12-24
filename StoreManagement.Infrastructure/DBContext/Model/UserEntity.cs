@@ -18,8 +18,8 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public UserEntity()
         {
             Id = default;
-            Username = String.Empty;
-            Password = String.Empty;
+            Username = string.Empty;
+            Password = string.Empty;
         }
     }
 }
