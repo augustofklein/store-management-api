@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Auth.Command;
 using StoreManagement.WebApi.Model;
@@ -11,6 +12,7 @@ namespace StoreManagement.WebApi.Controllers
     {
         private readonly IMediator _mediator = mediator;
 
+        [AllowAnonymous]
         [MapToApiVersion("1")]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] User user, CancellationToken cancellationToken)

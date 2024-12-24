@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.WebApi.DependencyInjection;
 
@@ -14,6 +17,21 @@ namespace StoreManagement.WebApi
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                };
+            });
 
             services.AddApiVersioning(config =>
             {
@@ -34,8 +52,8 @@ namespace StoreManagement.WebApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseMiddleware<Middleware>();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             if (env.IsDevelopment())
