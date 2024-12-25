@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoreManagement.Application.Product.Command;
 
 namespace StoreManagement.WebApi.Controllers
 {
@@ -15,7 +16,14 @@ namespace StoreManagement.WebApi.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
         {
-            return Ok();
+            var command = new GetProductsCommand();
+
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if(response.IsFailure)
+                return BadRequest(response.Error);
+
+            return Ok(response.Value);
         }
     }
 }

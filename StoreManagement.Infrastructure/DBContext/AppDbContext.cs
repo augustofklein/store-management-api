@@ -7,10 +7,12 @@ namespace StoreManagement.Infrastructure.DBContext
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public required DbSet<UserEntity> Users { get; set; }
+        public required DbSet<ProductEntity> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductTypeConfiguration());
         }
     }
 }

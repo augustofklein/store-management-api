@@ -45,6 +45,7 @@ namespace StoreManagement.WebApi
             services.AddMediatorInjection();
             services.AddServices();
             services.AddHandles();
+            services.AddQueries();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
