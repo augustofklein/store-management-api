@@ -6,12 +6,12 @@ namespace StoreManagement.WebApi.Model
     public class AddProduct
     {
         [Required]
-        public int Id { get; set; }
+        public int Id { get; set; } = default;
 
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         
         [Required]
-        public int Stock { get; set; }
+        public int Stock { get; set; } = default;
     }
 }
