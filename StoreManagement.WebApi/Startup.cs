@@ -46,6 +46,7 @@ namespace StoreManagement.WebApi
             services.AddServices();
             services.AddHandles();
             services.AddQueries();
+            services.AddRepositories();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

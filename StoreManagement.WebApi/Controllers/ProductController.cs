@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Product.Command;
+using StoreManagement.WebApi.Model;
 
 namespace StoreManagement.WebApi.Controllers
 {
@@ -24,6 +25,34 @@ namespace StoreManagement.WebApi.Controllers
                 return BadRequest(response.Error);
 
             return Ok(response.Value);
+        }
+
+        [MapToApiVersion("1")]
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromBody] AddProduct product, CancellationToken cancellationToken)
+        {
+            var command = new AddProductCommand(product.Id, product.Description, product.Stock);
+
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if(response.IsFailure)
+                return BadRequest(response.Error);
+
+            return Ok();
+        }
+
+        [MapToApiVersion("1")]
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> AddProduct(int id, CancellationToken cancellationToken)
+        {
+            var command = new RemoveProductCommand(id);
+
+            var response = await _mediator.Send(command, cancellationToken);
+
+            if(response.IsFailure)
+                return BadRequest(response.Error);
+
+            return Ok();
         }
     }
 }
