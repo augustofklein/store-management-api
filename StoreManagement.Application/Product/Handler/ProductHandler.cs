@@ -43,7 +43,7 @@ namespace StoreManagement.Application.Product.Handler
 
         public async Task<Result> Handle(EditProductCommand command, CancellationToken cancellationToken)
         {
-            var result = await _productRepository.EditProduct(command.Id, command.Description, command.Stock, cancellationToken);
+            var result = await _productRepository.EditProduct(command.Id, command.Description, cancellationToken);
 
             if(result.IsFailure)
                 return Result.Failure(result.Error);

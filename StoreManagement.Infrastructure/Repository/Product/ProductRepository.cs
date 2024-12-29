@@ -53,7 +53,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             }
         }
 
-        public async Task<Result> EditProduct(int id, string description, int stock, CancellationToken cancellationToken)
+        public async Task<Result> EditProduct(int id, string description, CancellationToken cancellationToken)
         {
             try
             {
@@ -65,7 +65,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 }
 
                 product.Description = description;
-                product.Stock = stock;
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
