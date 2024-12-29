@@ -6,5 +6,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
     {
         Task<Result> AddProduct(int id, string description, int stock, CancellationToken cancellationToken);
         Task<Result> RemoveProduct(int id, CancellationToken cancellationToken);
+        Task<Result> EditProduct(int id, string description, int stock, CancellationToken cancellationToken);
     }
 }

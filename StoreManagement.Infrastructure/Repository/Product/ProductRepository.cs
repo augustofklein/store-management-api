@@ -1,4 +1,3 @@
-using System;
 using CSharpFunctionalExtensions;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.Infrastructure.DBContext.Model;
@@ -11,33 +10,71 @@ namespace StoreManagement.Infrastructure.Repository.Product
 
         public async Task<Result> AddProduct(int id, string description, int stock, CancellationToken cancellationToken)
         {
-            var product = new ProductEntity
+            try
             {
-                Id = id,
-                Description = description,
-                Stock = stock
-            };
+                var product = new ProductEntity
+                {
+                    Id = id,
+                    Description = description,
+                    Stock = stock
+                };
 
-            await _dbContext.Products.AddAsync(product, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                await _dbContext.Products.AddAsync(product, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Result.Success();
+                return Result.Success();
+            }
+            catch(Exception ex)
+            {
+                return Result.Failure($"An error occurred while adding the product: {ex.Message}");
+            }
         }
 
         public async Task<Result> RemoveProduct(int id, CancellationToken cancellationToken)
         {
-            var product = await _dbContext.Products.FindAsync([id], cancellationToken);
-            
-            if (product == null)
+            try
             {
-                return Result.Failure($"Product with ID {id} not found.");
+                var product = await _dbContext.Products.FindAsync([id], cancellationToken);
+                
+                if (product == null)
+                {
+                    return Result.Failure($"Product with ID {id} not found.");
+                }
+
+                _dbContext.Products.Remove(product);
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return Result.Success();
             }
+            catch(Exception ex)
+            {
+                return Result.Failure($"An error occurred while removing the product: {ex.Message}");
+            }
+        }
 
-            _dbContext.Products.Remove(product);
+        public async Task<Result> EditProduct(int id, string description, int stock, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var product = await _dbContext.Products.FindAsync([id], cancellationToken);
+                
+                if (product == null)
+                {
+                    return Result.Failure($"Product with ID {id} not found.");
+                }
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                product.Description = description;
+                product.Stock = stock;
 
-            return Result.Success();
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return Result.Success();
+            }
+            catch(Exception ex)
+            {
+                return Result.Failure($"An error occurred while updating the product: {ex.Message}");
+            }
         }
     }
 }

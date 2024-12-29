@@ -1,9 +1,8 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace StoreManagement.WebApi.Model
 {
-    public class AddProduct
+    public class ProductInputModel
     {
         [Required]
         public int Id { get; set; } = default;
