@@ -31,7 +31,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] AddProductInputModel product, CancellationToken cancellationToken)
         {
-            var command = new AddProductCommand(product.Id, product.Description, product.Stock);
+            var command = new AddProductCommand(product.Id, product.Barcode, product.Description, product.Stock);
 
             var response = await _mediator.Send(command, cancellationToken);
 

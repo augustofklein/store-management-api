@@ -8,13 +8,14 @@ namespace StoreManagement.Infrastructure.Repository.Product
     {
         private readonly AppDbContext _dbContext = dbContext;
 
-        public async Task<Result> AddProduct(int id, string description, int stock, CancellationToken cancellationToken)
+        public async Task<Result> AddProduct(int id, string barcode, string description, int stock, CancellationToken cancellationToken)
         {
             try
             {
                 var product = new ProductEntity
                 {
                     Id = id,
+                    Barcode = barcode,
                     Description = description,
                     Stock = stock
                 };

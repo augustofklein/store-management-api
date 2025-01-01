@@ -11,6 +11,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.ToTable("products").HasKey(product => new { product.Id });
 
             builder.Property(user => user.Id).HasColumnName("id").HasColumnType("integer");
+            builder.Property(user => user.Barcode).HasColumnName("barcode").HasColumnType("varchar(13)");
             builder.Property(user => user.Description).HasColumnName("description").HasColumnType("varchar(50)");
             builder.Property(user => user.Stock).HasColumnName("stock").HasColumnType("integer");
         }

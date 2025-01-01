@@ -23,7 +23,7 @@ namespace StoreManagement.Application.Product.Handler
 
         public async Task<Result> Handle(AddProductCommand command, CancellationToken cancellationToken)
         {
-            var result = await _productRepository.AddProduct(command.Id, command.Description, command.Stock, cancellationToken);
+            var result = await _productRepository.AddProduct(command.Id, command.Barcode, command.Description, command.Stock, cancellationToken);
 
             if(result.IsFailure)
                 return Result.Failure(result.Error);

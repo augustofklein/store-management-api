@@ -17,6 +17,7 @@ namespace StoreManagement.Application.Product.Queries
                 var products = result.Select(r => new ProductDto
                 {
                     Id = r.Id,
+                    Barcode = r.Barcode,
                     Description = r.Description,
                     Stock = r.Stock
                 });
