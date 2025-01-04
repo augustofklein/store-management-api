@@ -15,7 +15,7 @@ namespace StoreManagement.Application.Auth.Handler
             var validation = await _authService.ValidateLogin(command.Username, command.Password, cancellationToken);
 
             if(validation.IsFailure)
-                return Result.Failure(validation.Error).ToString();
+                return Result.Failure<string>(validation.Error);
 
             string token = _jwtService.GenerateToken(command.Username);
 
