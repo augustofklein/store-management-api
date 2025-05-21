@@ -35,12 +35,12 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok();
+            return Ok(StatusCodes.Status201Created);
         }
 
         [MapToApiVersion("1")]
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> AddProduct(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> RemoveProduct(int id, CancellationToken cancellationToken)
         {
             var command = RemoveProductCommand.CreateCommand(id);
 
@@ -48,7 +48,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok();
+            return Ok(StatusCodes.Status204NoContent);
         }
 
         [MapToApiVersion("1")]
@@ -62,7 +62,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok();
+            return Ok(StatusCodes.Status204NoContent);
         }
     }
 }
