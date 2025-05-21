@@ -5,12 +5,9 @@ namespace StoreManagement.Application.Product.Command
 {
     public class AddProductCommand(int id, string barcode, string description, int stock) : IRequest<Result>
     {
-        public int Id { get; set; } = id;
-        public string Barcode { get; set; } = barcode;
-        public string Description { get; set; } = description;
-        public int Stock { get; set; } = stock;
-
-        public static AddProductCommand CreateCommand(int id, string barcode, string description, int stock) =>
-            new(id, barcode, description, stock);
+        public int Id { get; private set; } = id;
+        public string Barcode { get; private set; } = barcode;
+        public string Description { get; private set; } = description;
+        public int Stock { get; private set; } = stock;
     }
 }

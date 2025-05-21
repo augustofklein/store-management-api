@@ -29,12 +29,9 @@ namespace StoreManagement.WebApi.Controllers
 
         [MapToApiVersion("1")]
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] AddProductInputModel product, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command, CancellationToken cancellationToken)
         {
-            var command = new AddProductCommand(product.Id, product.Barcode, product.Description, product.Stock);
-
             var response = await _mediator.Send(command, cancellationToken);
-
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
@@ -45,10 +42,9 @@ namespace StoreManagement.WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> AddProduct(int id, CancellationToken cancellationToken)
         {
-            var command = new RemoveProductCommand(id);
+            var command = RemoveProductCommand.CreateCommand(id);
 
             var response = await _mediator.Send(command, cancellationToken);
-
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
@@ -59,7 +55,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
         {
-            var command = new EditProductCommand(id, product.Description);
+            var command = EditProductCommand.CreateCommand(id, product.Description);
 
             var response = await _mediator.Send(command, cancellationToken);
 
