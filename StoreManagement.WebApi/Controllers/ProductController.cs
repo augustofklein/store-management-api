@@ -35,7 +35,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok(StatusCodes.Status201Created);
+            return Created();
         }
 
         [MapToApiVersion("1")]
@@ -48,7 +48,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok(StatusCodes.Status204NoContent);
+            return NoContent();
         }
 
         [MapToApiVersion("1")]
@@ -62,7 +62,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok(StatusCodes.Status204NoContent);
+            return NoContent();
         }
     }
 }
