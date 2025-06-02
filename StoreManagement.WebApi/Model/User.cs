@@ -2,12 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StoreManagement.WebApi.Model
 {
-    public class User
+    public class User(string username, string password)
     {
-        [Required]
-        public string Username { get; set;} = string.Empty;
-        
-        [Required]
-        public string Password { get; set; } = string.Empty;
+        public string Username { get; private set; } = username;
+        public string Password { get; private set; } = password;
     }
 }
