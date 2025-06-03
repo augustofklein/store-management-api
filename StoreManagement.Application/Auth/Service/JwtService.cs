@@ -4,16 +4,15 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using StoreManagement.Application.Auth.Model;
 
 namespace StoreManagement.Application.Auth.Service
 {
     public class JwtService(IConfiguration configuration) : IJwtService
     {
-        private readonly IConfiguration _configuration = configuration;
-
-        public string GenerateToken(string username)
+        public UserToken GenerateToken(string username)
         {
-            var jwtSettings = _configuration.GetSection("Jwt");
+            var jwtSettings = configuration.GetSection("Jwt");
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -32,8 +31,10 @@ namespace StoreManagement.Application.Auth.Service
                 expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"])),
                 signingCredentials: credentials
             );
+            
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new UserToken(accessToken);
         }
     }
 }

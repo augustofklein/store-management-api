@@ -29,7 +29,7 @@ namespace StoreManagement.WebApi.Controllers
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
-            return Ok(new { Token = response.Value });
+            return Ok(response.Value);
         }
         
         private User? ExtractBasicAuthCredentials()

@@ -1,7 +1,9 @@
+using StoreManagement.Application.Auth.Model;
+
 namespace StoreManagement.Application.Auth.Service
 {
     public interface IJwtService
     {
-        string GenerateToken(string username);
+        UserToken GenerateToken(string username);
     }
 }
