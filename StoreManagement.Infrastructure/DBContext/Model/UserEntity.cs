@@ -4,22 +4,9 @@ namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class UserEntity
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-
-        public UserEntity(int id, string username, string password)
-        {
-            Id = id;
-            Username = username;
-            Password = password;
-        }
-
-        public UserEntity()
-        {
-            Id = default;
-            Username = string.Empty;
-            Password = string.Empty;
-        }
+        public int Id { get; private set; }
+        public int CompanyId { get; private set; }
+        public string Email { get; private set; } = string.Empty;
+        public string Password { get; private set; } = string.Empty;
     }
 }

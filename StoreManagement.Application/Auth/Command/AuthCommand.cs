@@ -6,8 +6,8 @@ namespace StoreManagement.Application.Auth.Command
 {
     public class AuthCommand(string username, string password) : IRequest<Result<UserToken>>
     {
-        public string Username { get; set; } = username;
-        public string Password { get; set; } = password;
+        public string Username { get; private set; } = username;
+        public string Password { get; private set; } = password;
 
         public static AuthCommand CreateCommand(string username, string password) =>
             new(username, password);

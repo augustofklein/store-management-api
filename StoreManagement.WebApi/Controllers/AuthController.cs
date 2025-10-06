@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Auth.Command;
 using StoreManagement.WebApi.Model;
+using StoreManagement.WebApi.SwaggerConfiguration;
 
 namespace StoreManagement.WebApi.Controllers
 {
@@ -15,7 +16,8 @@ namespace StoreManagement.WebApi.Controllers
 
         [AllowAnonymous]
         [MapToApiVersion("1")]
-        [HttpGet("login")]
+        [HttpGet]
+        [RequireBasicAuth]
         public async Task<IActionResult> Login(CancellationToken cancellationToken)
         {
             var credentials = ExtractBasicAuthCredentials();

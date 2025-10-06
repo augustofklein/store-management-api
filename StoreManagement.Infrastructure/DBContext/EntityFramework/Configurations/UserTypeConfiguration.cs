@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StoreManagement.Infrastructure.DBContext.Model;
@@ -12,8 +11,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.ToTable("users").HasKey(user => new { user.Id });
 
             builder.Property(user => user.Id).HasColumnName("id").HasColumnType("serial");
-            builder.Property(user => user.Username).HasColumnName("username").HasColumnType("varchar(50)");
-            builder.Property(user => user.Password).HasColumnName("password").HasColumnType("text");
+            builder.Property(user => user.CompanyId).HasColumnName("company_id").HasColumnType("int");
+            builder.Property(user => user.Email).HasColumnName("email").HasColumnType("varchar(50)");
+            builder.Property(user => user.Password).HasColumnName("password_hash").HasColumnType("varchar(100)");
         }
     }
 }

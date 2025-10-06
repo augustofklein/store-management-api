@@ -8,20 +8,13 @@ namespace StoreManagement.Application.Auth.Service
     {
         private readonly AppDbContext _dbContext = dbContext;
         
-        public async Task<Result> ValidateLogin(string username, string password, CancellationToken cancellationToken)
+        public async Task<Result> ValidateLogin(string email, string password, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(e => e.Username == username, cancellationToken);
+                .FirstOrDefaultAsync(e => e.Email == email, cancellationToken);
 
-            if (user == null)
-            {
-                return Result.Failure("Invalid username or password.");
-            }
-
-            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-            {
-                return Result.Failure("Invalid username or password.");
-            }
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+                return Result.Failure("Invalid email or password.");
 
             return Result.Success();
         }

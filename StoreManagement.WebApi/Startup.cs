@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.WebApi.DependencyInjection;
+using StoreManagement.WebApi.SwaggerConfiguration;
 
 namespace StoreManagement.WebApi
 {
@@ -52,6 +54,21 @@ namespace StoreManagement.WebApi
 
             services.AddHealthChecks();
             services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+                // Add basic auth definition
+                c.AddSecurityDefinition("basicAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "basic",
+                    Description = "HTTP Basic Authentication"
+                });
+
+                // Operation filter will apply the security requirement per-action
+                c.OperationFilter<AddBasicAuthRequirementOperationFilter>();
+            });
 
             services.AddMediatorInjection();
             services.AddServices();
@@ -71,6 +88,8 @@ namespace StoreManagement.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseEndpoints(endpoints =>
