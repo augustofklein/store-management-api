@@ -9,13 +9,11 @@ using StoreManagement.WebApi.SwaggerConfiguration;
 namespace StoreManagement.WebApi.Controllers
 {
     [ApiController]
+    [ApiVersion("1")]
     [Route("v{version:ApiVersion}/[controller]")]
     public class AuthController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator = mediator;
-
         [AllowAnonymous]
-        [MapToApiVersion("1")]
         [HttpGet]
         [RequireBasicAuth]
         public async Task<IActionResult> Login(CancellationToken cancellationToken)
@@ -26,7 +24,7 @@ namespace StoreManagement.WebApi.Controllers
                 return BadRequest("Invalid or missing Basic Auth credentials");
             
             var command = new AuthCommand(credentials.Username, credentials.Password);
-            var response = await _mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
             if(response.IsFailure)
                 return BadRequest(response.Error);

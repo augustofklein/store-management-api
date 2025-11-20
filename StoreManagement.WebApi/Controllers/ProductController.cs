@@ -2,62 +2,59 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Product.Command;
-using StoreManagement.WebApi.Model;
+using StoreManagement.Application.Product.Queries;
+using StoreManagement.WebApi.InputModel;
 
 namespace StoreManagement.WebApi.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("v{version:ApiVersion}/[controller]")]
-    public class ProductController(IMediator mediator) : ControllerBase
+    [ApiVersion("1")]
+    [Route("v{version:ApiVersion}/companies/{companyId}/[controller]")]
+    public class ProductController(IMediator mediator, IProductQueries productQueries) : ControllerBase
     {
-        private readonly IMediator _mediator = mediator;
-
-        [MapToApiVersion("1")]
         [HttpGet]
-        public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProducts(int companyId, CancellationToken cancellationToken)
         {
-            var command = new GetProductsCommand();
-
-            var response = await _mediator.Send(command, cancellationToken);
-
-            if(response.IsFailure)
-                return BadRequest(response.Error);
+            var response = await productQueries.GetProducts(companyId, cancellationToken);
+            if (response.Value == null)
+            {
+                return NotFound();
+            }
 
             return Ok(response.Value);
         }
 
-        [MapToApiVersion("1")]
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddProduct(int companyId, [FromBody] AddProductInputModel inputModel, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(command, cancellationToken);
+            var command = AddProductCommand.CreateCommand(companyId, inputModel.SkuId, inputModel.Status, inputModel.Barcode, inputModel.Description, inputModel.Stock);
+
+            var response = await mediator.Send(command, cancellationToken);
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
             return Created();
         }
 
-        [MapToApiVersion("1")]
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> RemoveProduct(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> RemoveProduct(int companyId, int id, CancellationToken cancellationToken)
         {
-            var command = RemoveProductCommand.CreateCommand(id);
+            var command = RemoveProductCommand.CreateCommand(companyId, id);
 
-            var response = await _mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
             if(response.IsFailure)
                 return BadRequest(response.Error);
 
             return NoContent();
         }
 
-        [MapToApiVersion("1")]
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditProduct(int companyId, int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
         {
-            var command = EditProductCommand.CreateCommand(id, product.Description);
+            var command = EditProductCommand.CreateCommand(companyId, id, product.Status, product.Description);
 
-            var response = await _mediator.Send(command, cancellationToken);
+            var response = await mediator.Send(command, cancellationToken);
 
             if(response.IsFailure)
                 return BadRequest(response.Error);

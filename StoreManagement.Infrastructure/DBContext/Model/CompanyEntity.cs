@@ -1,17 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace StoreManagement.Infrastructure.DBContext.Model
+﻿namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class CompanyEntity
     {
-        [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public CompanyEntity(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
+        public required ICollection<ProductEntity> Products { get; set; }
     }
 }

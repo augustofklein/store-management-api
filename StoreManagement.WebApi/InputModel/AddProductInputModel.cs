@@ -1,11 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace StoreManagement.WebApi.Model
+namespace StoreManagement.WebApi.InputModel
 {
     public class AddProductInputModel
     {
         [Required]
-        public int Id { get; set; } = default;
+        public string SkuId { get; set; } = string.Empty;
+
+        [Required]
+        public bool Status { get; set; }
 
         [Required]
         public string Barcode { get; set; } = string.Empty;
@@ -14,6 +17,6 @@ namespace StoreManagement.WebApi.Model
         public string Description { get; set; } = string.Empty;
         
         [Required]
-        public int Stock { get; set; } = default;
+        public int Stock { get; set; }
     }
 }

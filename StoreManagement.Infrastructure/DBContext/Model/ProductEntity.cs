@@ -2,25 +2,14 @@ namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class ProductEntity
     {
+        public int CompanyId { get; set; }
         public int Id { get; set; }
-        public string Barcode { get; set; }
-        public string Description { get; set; }
+        public string SkuId { get; set; } = string.Empty;
+        public bool Status { get; set; }
+        public string Barcode { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public int Stock { get; set; }
 
-        public ProductEntity(int id, string barcode, string description, int stock)
-        {
-            Id = id;
-            Barcode = barcode;
-            Description = description;
-            Stock = stock;
-        }
-
-        public ProductEntity()
-        {
-            Id = default;
-            Barcode = string.Empty;
-            Description = string.Empty;
-            Stock = default;
-        }
+        public virtual CompanyEntity Company { get; set; }
     }
 }

@@ -1,12 +1,10 @@
-using System;
-
 namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class UserEntity
     {
-        public int Id { get; private set; }
-        public int CompanyId { get; private set; }
-        public string Email { get; private set; } = string.Empty;
-        public string Password { get; private set; } = string.Empty;
+        public int CompanyId { get; set; }
+        public int Id { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
     }
 }

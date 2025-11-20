@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.WebApi.DependencyInjection;
-using StoreManagement.WebApi.SwaggerConfiguration;
 
 namespace StoreManagement.WebApi
 {
@@ -59,15 +58,30 @@ namespace StoreManagement.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
                 // Add basic auth definition
-                c.AddSecurityDefinition("basicAuth", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "basic",
-                    Description = "HTTP Basic Authentication"
+                    In = ParameterLocation.Header,
+                    Description = "Insert the JWT token: Bearer {token}",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
                 });
 
-                // Operation filter will apply the security requirement per-action
-                c.OperationFilter<AddBasicAuthRequirementOperationFilter>();
+                // Apply the definition globally
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             services.AddMediatorInjection();

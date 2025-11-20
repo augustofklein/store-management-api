@@ -1,13 +1,33 @@
--- Create companies table
 CREATE TABLE companies (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50)
+    name VARCHAR(50) NOT NULL,
+
+    CONSTRAINT uq_companies_name UNIQUE (name)
 );
 
--- Create users table
 CREATE TABLE users (
+    company_id INTEGER NOT NULL,
     id SERIAL PRIMARY KEY,
-    company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
-    email VARCHAR(50) NOT NULL UNIQUE,
-    password_hash VARCHAR(100) NOT NULL
+    email VARCHAR(50) NOT NULL,
+    password_hash VARCHAR(200) NOT NULL,
+
+    CONSTRAINT fk_users_company
+        FOREIGN KEY (company_id)
+        REFERENCES companies(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE products (
+    company_id INTEGER NOT NULL,
+    id SERIAL PRIMARY KEY,
+    sku_id CHAR(20) NOT NULL,
+    status BOOLEAN NOT NULL,
+    barcode VARCHAR(13) NOT NULL,
+    description VARCHAR(50) NOT NULL,
+    stock INTEGER NOT NULL,
+
+    CONSTRAINT fk_products_company
+        FOREIGN KEY (company_id)
+        REFERENCES companies(id)
+        ON DELETE CASCADE
 );

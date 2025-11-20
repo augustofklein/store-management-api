@@ -8,12 +8,24 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("users").HasKey(user => new { user.Id });
+            builder.ToTable("users")
+                .HasKey(user => new { user.Id });
 
-            builder.Property(user => user.Id).HasColumnName("id").HasColumnType("serial");
-            builder.Property(user => user.CompanyId).HasColumnName("company_id").HasColumnType("int");
-            builder.Property(user => user.Email).HasColumnName("email").HasColumnType("varchar(50)");
-            builder.Property(user => user.Password).HasColumnName("password_hash").HasColumnType("varchar(100)");
+            builder.Property(user => user.CompanyId)
+                .HasColumnName("company_id")
+                .HasColumnType("int");
+
+            builder.Property(user => user.Id)
+                .HasColumnName("id")
+                .HasColumnType("serial");
+
+            builder.Property(user => user.Email)
+                .HasColumnName("email")
+                .HasColumnType("varchar(50)");
+
+            builder.Property(user => user.PasswordHash)
+                .HasColumnName("password_hash")
+                .HasColumnType("varchar(200)");
         }
     }
 }
