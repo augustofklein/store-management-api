@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Product.Command;
 using StoreManagement.Infrastructure.Repository.Product;
+using StoreManagement.WebApi.Extensions;
 using StoreManagement.WebApi.InputModel;
 
 namespace StoreManagement.WebApi.Controllers
@@ -10,12 +11,14 @@ namespace StoreManagement.WebApi.Controllers
     [ApiController]
     [Authorize]
     [ApiVersion("1")]
-    [Route("v{version:ApiVersion}/companies/{companyId}/[controller]")]
+    [Route("v{version:ApiVersion}/[controller]")]
     public class ProductController(IMediator mediator, IProductRepository productRepository) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int companyId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
         {
+            var companyId = User.GetCompanyId();
+
             var response = await productRepository.GetProducts(companyId, cancellationToken);
             if (response.Value == null)
             {
@@ -26,8 +29,10 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct(int companyId, [FromBody] AddProductInputModel inputModel, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddProduct([FromBody] AddProductInputModel inputModel, CancellationToken cancellationToken)
         {
+            var companyId = User.GetCompanyId();
+
             var command = AddProductCommand.CreateCommand(companyId, inputModel.SkuId, inputModel.Status, inputModel.Barcode, inputModel.Description, inputModel.Stock);
 
             var response = await mediator.Send(command, cancellationToken);
@@ -38,8 +43,10 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> RemoveProduct(int companyId, int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> RemoveProduct(int id, CancellationToken cancellationToken)
         {
+            var companyId = User.GetCompanyId();
+
             var command = RemoveProductCommand.CreateCommand(companyId, id);
 
             var response = await mediator.Send(command, cancellationToken);
@@ -50,8 +57,10 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> EditProduct(int companyId, int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
         {
+            var companyId = User.GetCompanyId();
+
             var command = EditProductCommand.CreateCommand(companyId, id, product.Status, product.Description);
 
             var response = await mediator.Send(command, cancellationToken);
