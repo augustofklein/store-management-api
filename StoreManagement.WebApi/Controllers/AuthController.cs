@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Auth.Command;
-using StoreManagement.WebApi.Model;
+using StoreManagement.WebApi.InputModel;
 using StoreManagement.WebApi.SwaggerConfiguration;
 
 namespace StoreManagement.WebApi.Controllers
@@ -14,7 +14,7 @@ namespace StoreManagement.WebApi.Controllers
     public class AuthController(IMediator mediator) : ControllerBase
     {
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         [RequireBasicAuth]
         public async Task<IActionResult> Login(CancellationToken cancellationToken)
         {
@@ -23,7 +23,7 @@ namespace StoreManagement.WebApi.Controllers
             if (credentials == null)
                 return BadRequest("Invalid or missing Basic Auth credentials");
             
-            var command = new AuthCommand(credentials.Username, credentials.Password);
+            var command = new AuthCommand(credentials.Username, credentials.Password, credentials.CompanyId);
             var response = await mediator.Send(command, cancellationToken);
 
             if(response.IsFailure)
@@ -34,18 +34,19 @@ namespace StoreManagement.WebApi.Controllers
         
         private User? ExtractBasicAuthCredentials()
         {
-            var authHeader = Request.Headers["Authorization"].FirstOrDefault();
-    
-            if (authHeader == null || !authHeader.StartsWith("Basic "))
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            var companyHeader = Request.Headers["CompanyId"].FirstOrDefault();
+
+            if (authHeader == null || !authHeader.StartsWith("Basic ") || companyHeader == null)
                 return null;
 
             try
             {
                 var encodedCredentials = authHeader.Substring("Basic ".Length).TrimStart();
                 var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
-                var credentials = decodedCredentials.Split(':', 2);
+                var credentials = decodedCredentials.Split(':', 3);
         
-                return credentials.Length == 2 ? new User(credentials[0], credentials[1]) : null;
+                return credentials.Length == 2 ? new User(credentials[0], credentials[1], Int32.Parse(companyHeader)) : null;
             }
             catch
             {

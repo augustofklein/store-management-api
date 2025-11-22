@@ -1,11 +1,12 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StoreManagement.Application.Auth.Model;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.WebApi.DependencyInjection;
+using System.Text;
 
 namespace StoreManagement.WebApi
 {
@@ -89,6 +90,8 @@ namespace StoreManagement.WebApi
             services.AddHandles();
             services.AddRepositories();
             services.AddValidations();
+
+            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
