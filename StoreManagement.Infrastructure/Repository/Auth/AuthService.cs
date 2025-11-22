@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Infrastructure.DBContext;
 
 namespace StoreManagement.Application.Auth.Service

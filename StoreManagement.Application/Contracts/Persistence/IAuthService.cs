@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 
-namespace StoreManagement.Application.Auth.Service
+namespace StoreManagement.Application.Contracts.Persistence
 {
     public interface IAuthService
     {

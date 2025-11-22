@@ -3,6 +3,7 @@ using MediatR;
 using StoreManagement.Application.Auth.Command;
 using StoreManagement.Application.Auth.Model;
 using StoreManagement.Application.Auth.Service;
+using StoreManagement.Application.Contracts.Persistence;
 
 namespace StoreManagement.Application.Auth.Handler
 {

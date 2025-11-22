@@ -1,4 +1,5 @@
 using StoreManagement.Application.Auth.Service;
+using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Service;
 
 namespace StoreManagement.WebApi.DependencyInjection

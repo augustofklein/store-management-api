@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Product.Command;
-using StoreManagement.Application.Product.Queries;
+using StoreManagement.Infrastructure.Repository.Product;
 using StoreManagement.WebApi.InputModel;
 
 namespace StoreManagement.WebApi.Controllers
@@ -11,12 +11,12 @@ namespace StoreManagement.WebApi.Controllers
     [Authorize]
     [ApiVersion("1")]
     [Route("v{version:ApiVersion}/companies/{companyId}/[controller]")]
-    public class ProductController(IMediator mediator, IProductQueries productQueries) : ControllerBase
+    public class ProductController(IMediator mediator, IProductRepository productRepository) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetProducts(int companyId, CancellationToken cancellationToken)
         {
-            var response = await productQueries.GetProducts(companyId, cancellationToken);
+            var response = await productRepository.GetProducts(companyId, cancellationToken);
             if (response.Value == null)
             {
                 return NotFound();
