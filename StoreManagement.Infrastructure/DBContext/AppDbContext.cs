@@ -13,6 +13,9 @@ namespace StoreManagement.Infrastructure.DBContext
         {
             modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerContactTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ContactTypeConfiguration());
         }
     }
 }

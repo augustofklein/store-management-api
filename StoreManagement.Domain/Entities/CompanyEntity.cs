@@ -6,5 +6,6 @@
         public string Name { get; set; } = string.Empty;
 
         public required ICollection<ProductEntity> Products { get; set; }
+        public required ICollection<CustomerEntity> Customers { get; set; }
     }
 }
