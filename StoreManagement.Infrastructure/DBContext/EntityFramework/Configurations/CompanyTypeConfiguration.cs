@@ -8,14 +8,19 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<CompanyEntity> builder)
         {
-            builder.ToTable("companies")
-                .HasKey(company => new { company.Id });
+            builder.ToTable("companies");
 
-            builder.Property(company => company.Id)
+            builder.HasKey(c => c.Id);
+
+            builder.Property(c => c.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(c => c.Id)
                 .HasColumnName("id")
                 .HasColumnType("serial");
 
-            builder.Property(company => company.Name)
+            builder.Property(c => c.Name)
                 .HasColumnName("name")
                 .HasColumnType("varchar(50)");
         }

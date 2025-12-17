@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using StoreManagement.Infrastructure.Repository.Product;
+using StoreManagement.Application.Contracts.Persistence;
 
 namespace StoreManagement.Application.Product.Service
 {

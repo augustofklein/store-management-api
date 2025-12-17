@@ -1,7 +1,7 @@
 using CSharpFunctionalExtensions;
 using StoreManagement.Application.Product.Model;
 
-namespace StoreManagement.Infrastructure.Repository.Product
+namespace StoreManagement.Application.Contracts.Persistence
 {
     public interface IProductRepository
     {

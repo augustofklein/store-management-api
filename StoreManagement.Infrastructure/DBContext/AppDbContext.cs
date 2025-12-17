@@ -8,6 +8,9 @@ namespace StoreManagement.Infrastructure.DBContext
     {
         public required DbSet<UserEntity> Users { get; set; }
         public required DbSet<ProductEntity> Products { get; set; }
+        public required DbSet<CustomerEntity> Customers { get; set; }
+        public required DbSet<CustomerContactEntity> CustomerContacts { get; set; }
+        public required DbSet<ContactTypeEntity> ContactType { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

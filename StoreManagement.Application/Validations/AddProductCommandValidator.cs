@@ -7,10 +7,10 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
 {
     public AddProductCommandValidator()
     {
-        RuleFor(command => command.SkuId).NotNull();
-        RuleFor(command => command.Status).NotNull();
-        RuleFor(command => command.Barcode).NotNull();
-        RuleFor(command => command.Description).NotNull();
-        RuleFor(command => command.Stock).NotNull();
+        RuleFor(c => c.SkuId).NotNull();
+        RuleFor(c => c.Status).NotNull();
+        RuleFor(c => c.Barcode).NotNull();
+        RuleFor(c => c.Description).NotNull();
+        RuleFor(c => c.Stock).NotNull();
     }
 }

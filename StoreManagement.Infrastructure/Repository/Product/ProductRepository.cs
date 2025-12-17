@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Model;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.Infrastructure.DBContext.Model;

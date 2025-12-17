@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace StoreManagement.WebApi.InputModel
+namespace StoreManagement.WebApi.InputModel.Product
 {
     public class EditProductInputModel
     {

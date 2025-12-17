@@ -1,8 +1,8 @@
 using CSharpFunctionalExtensions;
 using MediatR;
+using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Command;
 using StoreManagement.Application.Product.Service;
-using StoreManagement.Infrastructure.Repository.Product;
 
 namespace StoreManagement.Application.Product.Handler
 {

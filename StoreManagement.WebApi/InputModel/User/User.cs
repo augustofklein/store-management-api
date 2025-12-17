@@ -1,4 +1,4 @@
-namespace StoreManagement.WebApi.InputModel
+namespace StoreManagement.WebApi.InputModel.User
 {
     public class User(string username, string password, int companyId)
     {

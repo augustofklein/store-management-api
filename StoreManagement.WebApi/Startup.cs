@@ -87,7 +87,6 @@ namespace StoreManagement.WebApi
 
             services.AddMediatorInjection();
             services.AddServices();
-            services.AddHandles();
             services.AddRepositories();
             services.AddValidations();
 

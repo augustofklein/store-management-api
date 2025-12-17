@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Auth.Command;
-using StoreManagement.WebApi.InputModel;
+using StoreManagement.WebApi.InputModel.User;
 using StoreManagement.WebApi.SwaggerConfiguration;
 
 namespace StoreManagement.WebApi.Controllers

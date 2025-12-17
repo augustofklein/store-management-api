@@ -8,17 +8,34 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<CustomerContactEntity> builder)
         {
-            builder.ToTable("customer_contact")
-                .HasKey(c => new { c.Id });
+            builder.ToTable("customer_contact");
 
-            builder.HasOne(x => x.Customer)
-               .WithMany(x => x.CustomerContacts)
-               .HasForeignKey(x => x.CustomerId)
-               .OnDelete(DeleteBehavior.Restrict);
+            builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(cc => cc.CustomerId)
+                .HasColumnName("customer_id");
+
+            builder.Property(cc => cc.ContactTypeId)
+                .HasColumnName("contact_id");
+
+            builder.Property(c => c.Contact)
                 .HasColumnName("contact")
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(50)")
+                .IsRequired();
+
+            builder.HasOne(c => c.Customer)
+               .WithMany(c => c.CustomerContacts)
+               .HasForeignKey(c => c.CustomerId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(cc => cc.ContactType)
+               .WithMany(ct => ct.CustomerContacts)
+               .HasForeignKey(cc => cc.ContactTypeId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -8,8 +8,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<ContactTypeEntity> builder)
         {
-            builder.ToTable("contact_type")
-                .HasKey(c => new { c.Id });
+            builder.ToTable("contact_type");
+
+            builder.HasKey(c => c.Id);
+
+            builder.Property(c => c.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
 
             builder.Property(c => c.Description)
                 .HasColumnName("description")

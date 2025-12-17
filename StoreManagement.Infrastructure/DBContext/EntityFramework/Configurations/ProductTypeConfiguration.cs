@@ -8,13 +8,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<ProductEntity> builder)
         {
-            builder.ToTable("products")
-                .HasKey(p => new { p.Id });
+            builder.ToTable("products");
 
-            builder.HasOne(x => x.Company)
-               .WithMany(x => x.Products)
-               .HasForeignKey(x => x.CompanyId)
-               .OnDelete(DeleteBehavior.Restrict);
+            builder.HasKey(p => p.Id);
+
+            builder.Property(p => p.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
 
             builder.Property(p => p.CompanyId)
                 .HasColumnName("company_id")
@@ -43,6 +43,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.Property(p => p.Stock)
                 .HasColumnName("stock")
                 .HasColumnType("integer");
+
+            builder.HasOne(p => p.Company)
+               .WithMany(p => p.Products)
+               .HasForeignKey(p => p.CompanyId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

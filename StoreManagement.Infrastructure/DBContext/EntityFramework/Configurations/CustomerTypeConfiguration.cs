@@ -8,21 +8,30 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<CustomerEntity> builder)
         {
-            builder.ToTable("customer")
-                .HasKey(c => new { c.Id });
+            builder.ToTable("customers");
 
-            builder.HasOne(x => x.Company)
-               .WithMany(x => x.Customers)
-               .HasForeignKey(x => x.CompanyId)
-               .OnDelete(DeleteBehavior.Restrict);
+            builder.HasKey(c => c.Id);
 
-            builder.Property(p => p.Identification)
+            builder.Property(c => c.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(p => p.CompanyId)
+                .HasColumnName("company_id")
+                .HasColumnType("integer");
+
+            builder.Property(c => c.Identification)
                 .HasColumnName("identification")
                 .HasColumnType("varchar(18)");
 
-            builder.Property(p => p.Address)
+            builder.Property(c => c.Address)
                 .HasColumnName("address")
                 .HasColumnType("varchar(100)");
+
+            builder.HasOne(c => c.Company)
+               .WithMany(c => c.Customers)
+               .HasForeignKey(c => c.CompanyId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

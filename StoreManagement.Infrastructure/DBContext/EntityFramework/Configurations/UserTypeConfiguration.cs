@@ -8,24 +8,34 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("users")
-                .HasKey(user => new { user.Id });
+            builder.ToTable("users");
 
-            builder.Property(user => user.CompanyId)
+            builder.HasKey(u => u.Id);
+
+            builder.Property(u => u.Id)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(u => u.CompanyId)
                 .HasColumnName("company_id")
                 .HasColumnType("int");
 
-            builder.Property(user => user.Id)
+            builder.Property(u => u.Id)
                 .HasColumnName("id")
                 .HasColumnType("serial");
 
-            builder.Property(user => user.Email)
+            builder.Property(u => u.Email)
                 .HasColumnName("email")
                 .HasColumnType("varchar(50)");
 
-            builder.Property(user => user.PasswordHash)
+            builder.Property(u => u.PasswordHash)
                 .HasColumnName("password_hash")
                 .HasColumnType("varchar(200)");
+
+            builder.HasOne(p => p.Company)
+               .WithMany(p => p.Users)
+               .HasForeignKey(p => p.CompanyId)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

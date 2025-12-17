@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Command;
-using StoreManagement.Infrastructure.Repository.Product;
 using StoreManagement.WebApi.Extensions;
-using StoreManagement.WebApi.InputModel;
+using StoreManagement.WebApi.InputModel.Product;
 
 namespace StoreManagement.WebApi.Controllers
 {
@@ -17,9 +17,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
         {
-            var companyId = User.GetCompanyId();
-
-            var response = await productRepository.GetProducts(companyId, cancellationToken);
+            var response = await productRepository.GetProducts(User.GetCompanyId(), cancellationToken);
             if (response.Value == null)
             {
                 return NotFound();
@@ -31,9 +29,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] AddProductInputModel inputModel, CancellationToken cancellationToken)
         {
-            var companyId = User.GetCompanyId();
-
-            var command = AddProductCommand.CreateCommand(companyId, inputModel.SkuId, inputModel.Status, inputModel.Barcode, inputModel.Description, inputModel.Stock);
+            var command = AddProductCommand.CreateCommand(User.GetCompanyId(), inputModel.SkuId, inputModel.Status, inputModel.Barcode, inputModel.Description, inputModel.Stock);
 
             var response = await mediator.Send(command, cancellationToken);
             if(response.IsFailure)
@@ -45,9 +41,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> RemoveProduct(int id, CancellationToken cancellationToken)
         {
-            var companyId = User.GetCompanyId();
-
-            var command = RemoveProductCommand.CreateCommand(companyId, id);
+            var command = RemoveProductCommand.CreateCommand(User.GetCompanyId(), id);
 
             var response = await mediator.Send(command, cancellationToken);
             if(response.IsFailure)
@@ -59,9 +53,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
         {
-            var companyId = User.GetCompanyId();
-
-            var command = EditProductCommand.CreateCommand(companyId, id, product.Status, product.Description);
+            var command = EditProductCommand.CreateCommand(User.GetCompanyId(), id, product.Status, product.Description);
 
             var response = await mediator.Send(command, cancellationToken);
 
