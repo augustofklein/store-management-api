@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StoreManagement.Infrastructure.DBContext.Model;
 
@@ -16,13 +17,17 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
-            builder.Property(p => p.CompanyId)
+            builder.Property(c => c.CompanyId)
                 .HasColumnName("company_id")
                 .HasColumnType("integer");
 
             builder.Property(c => c.Identification)
                 .HasColumnName("identification")
                 .HasColumnType("varchar(18)");
+            
+            builder.Property(c => c.Name)
+                .HasColumnName("name")
+                .HasColumnType("varchar(100)");
 
             builder.Property(c => c.Address)
                 .HasColumnName("address")
@@ -32,6 +37,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                .WithMany(c => c.Customers)
                .HasForeignKey(c => c.CompanyId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(x => x.CustomerContacts)
+              .WithOne(x => x.Customer)
+              .HasForeignKey(x => x.CustomerId)
+              .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

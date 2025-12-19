@@ -25,6 +25,18 @@ namespace StoreManagement.WebApi.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id, CancellationToken cancellationToken)
+        {
+            var command = new DeleteCustomerCommand(User.GetCompanyId(), id);
+
+            var response = await mediator.Send(command, cancellationToken);
+            if (response.IsFailure)
+                return BadRequest(response.Error);
+
+            return NoContent();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetCustomers(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
         {

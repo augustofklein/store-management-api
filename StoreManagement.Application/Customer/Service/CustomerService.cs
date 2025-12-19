@@ -5,7 +5,7 @@ namespace StoreManagement.Application.Customer.Service
 {
     public class CustomerService(ICustomerRepository custumerRepository) : ICustomerService
     {
-        public async Task<Result> ValidateAddCustomerAsync(int companyId, string identification, CancellationToken cancellationToken)
+        public async Task<Result> ValidateCustomerNotExistsAsync(int companyId, string identification, CancellationToken cancellationToken)
         {
             if (await custumerRepository.VerifyCustomerByIdentificationExistAsync(companyId, identification, cancellationToken))
                 return Result.Failure("Customer already exists!");
@@ -13,9 +13,9 @@ namespace StoreManagement.Application.Customer.Service
             return Result.Success();
         }
 
-        public async Task<Result> ValidateEditCustomerAsync(int companyId, string identification, CancellationToken cancellationToken)
+        public async Task<Result> ValidateCustomerExistsByIdAsync(int companyId, int id, CancellationToken cancellationToken)
         {
-            if (!await custumerRepository.VerifyCustomerByIdentificationExistAsync(companyId, identification, cancellationToken))
+            if (!await custumerRepository.VerifyCustomerByIdExistAsync(companyId, id, cancellationToken))
                 return Result.Failure("Customer not exists!");
 
             return Result.Success();

@@ -32,9 +32,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("password_hash")
                 .HasColumnType("varchar(200)");
 
-            builder.HasOne(p => p.Company)
-               .WithMany(p => p.Users)
-               .HasForeignKey(p => p.CompanyId)
+            builder.HasOne(u => u.Company)
+               .WithMany(u => u.Users)
+               .HasForeignKey(u => u.CompanyId)
                .OnDelete(DeleteBehavior.Restrict);
         }
     }

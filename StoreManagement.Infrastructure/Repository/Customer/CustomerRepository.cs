@@ -16,6 +16,13 @@ namespace StoreManagement.Infrastructure.Repository.Customer
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
 
+        public async Task<bool> VerifyCustomerByIdExistAsync(int companyId, int id, CancellationToken cancellationToken)
+        {
+            return await dbContext.Customers
+                .Where(c => c.CompanyId == companyId && c.Id == id)
+                .FirstOrDefaultAsync(cancellationToken) != null;
+        }
+
         public async Task<Result<IEnumerable<CustomerDto>>> ReturnAllCustomersAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Customers
@@ -29,6 +36,7 @@ namespace StoreManagement.Infrastructure.Repository.Customer
                 {
                     Id = c.Id,
                     Identification = c.Identification,
+                    Name = c.Name,
                     Address = c.Address,
                     CustomerContacts = c.CustomerContacts.Select(ct => new CustomerContactDto
                     {
@@ -48,38 +56,34 @@ namespace StoreManagement.Infrastructure.Repository.Customer
             {
                 CompanyId = companyId,
                 Identification = customer.Identification,
+                Name = customer.Name,
                 Address = customer.Address,
 
-                CustomerContacts = customer.CustomerContacts.Select(c =>
+                CustomerContacts = [.. customer.CustomerContacts.Select(c =>
                     new CustomerContactEntity
                     {
-                        CustomerId = 0,
                         ContactTypeId = c.ContactType,
                         Contact = c.Contact
-                    }).ToList()
+                    })]
             };
 
             await dbContext.Customers.AddAsync(customerEntity, cancellationToken);
-
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            //var customerId = await dbContext.Customers
-            //    .Where(c => c.Identification == customer.Identification)
-            //    .Select(c => c.Id)
-            //    .FirstAsync(cancellationToken);
+            return true;
+        }
 
-            //foreach (CustomerContactDto contactItem in customer.CustomerContacts)
-            //{
-            //    var contactRegister = new CustomerContactEntity
-            //    {
-            //        CustomerId = customerId,
-            //        ContactId = contactItem.ContactId,
-            //        Id = 0,
-            //        Contact = contactItem.Contact
-            //    };
+        public async Task<bool> DeleteCustomerAsync(int companyId, int customerId, CancellationToken cancellationToken)
+        {
+            var customerEntity = await dbContext.Customers
+                .Where(c => c.CompanyId == companyId && c.Id == customerId)
+                .FirstOrDefaultAsync(cancellationToken);
 
-            //    await dbContext.CustomerContacts.AddAsync(contactRegister, cancellationToken);
-            //}
+            if (customerEntity == null)
+                return false;
+
+            dbContext.Customers.Remove(customerEntity);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return true;
         }

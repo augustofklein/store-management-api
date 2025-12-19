@@ -16,11 +16,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
-            builder.Property(cc => cc.CustomerId)
+            builder.Property(c => c.CustomerId)
                 .HasColumnName("customer_id");
 
-            builder.Property(cc => cc.ContactTypeId)
-                .HasColumnName("contact_id");
+            builder.Property(c => c.ContactTypeId)
+                .HasColumnName("contact_type_id");
 
             builder.Property(c => c.Contact)
                 .HasColumnName("contact")
@@ -32,9 +32,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                .HasForeignKey(c => c.CustomerId)
                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(cc => cc.ContactType)
-               .WithMany(ct => ct.CustomerContacts)
-               .HasForeignKey(cc => cc.ContactTypeId)
+            builder.HasOne(c => c.ContactType)
+               .WithMany(c => c.CustomerContacts)
+               .HasForeignKey(c => c.ContactTypeId)
                .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -7,12 +7,13 @@ using StoreManagement.Application.Customer.Service;
 
 namespace StoreManagement.Application.Customer.Handler
 {
-    public class CustomerHandler(ICustomerRepository customerRepository, ICustomerService customerService, IEFTransactionManager eFTransactionManager) :
-        IRequestHandler<AddCustomerCommand, Result>
+    public class CustomerHandler(ICustomerRepository customerRepository, ICustomerService customerService) :
+        IRequestHandler<AddCustomerCommand, Result>,
+        IRequestHandler<DeleteCustomerCommand, Result>
     {
         public async Task<Result> Handle(AddCustomerCommand command, CancellationToken cancellationToken)
         {
-            var validation = await customerService.ValidateAddCustomerAsync(command.CompanyId, command.Identification, cancellationToken);
+            var validation = await customerService.ValidateCustomerNotExistsAsync(command.CompanyId, command.Identification, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
@@ -20,6 +21,7 @@ namespace StoreManagement.Application.Customer.Handler
             {
                 Id = 0,
                 Identification = command.Identification,
+                Name = command.Name,
                 Address = command.Address,
                 CustomerContacts = [.. command.CustomerContacts.Select(c => new CustomerContactDto
                 {
@@ -30,9 +32,16 @@ namespace StoreManagement.Application.Customer.Handler
                 })]
             };
 
-            var result = await customerRepository.AddCustomerAsync(command.CompanyId, customer, cancellationToken);
+            return Result.Success(await customerRepository.AddCustomerAsync(command.CompanyId, customer, cancellationToken));
+        }
 
-            return Result.Success();
+        public async Task<Result> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
+        {
+            var validation = await customerService.ValidateCustomerExistsByIdAsync(command.companyId, command.Id, cancellationToken);
+            if (validation.IsFailure)
+                return Result.Failure(validation.Error);
+
+            return Result.Success(await customerRepository.DeleteCustomerAsync(command.companyId, command.Id, cancellationToken));
         }
     }
 }

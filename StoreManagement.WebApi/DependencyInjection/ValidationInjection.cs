@@ -1,5 +1,5 @@
 using FluentValidation;
-using StoreManagement.Application.Validations;
+using StoreManagement.Application.Validations.Product;
 
 namespace StoreManagement.WebApi.DependencyInjection;
 
