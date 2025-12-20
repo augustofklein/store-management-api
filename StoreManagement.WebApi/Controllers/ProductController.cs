@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Command;
 using StoreManagement.WebApi.Extensions;
-using StoreManagement.WebApi.InputModel.Product;
 
 namespace StoreManagement.WebApi.Controllers
 {
@@ -27,9 +26,9 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] AddProductInputModel inputModel, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command, CancellationToken cancellationToken)
         {
-            var command = AddProductCommand.CreateCommand(User.GetCompanyId(), inputModel.SkuId, inputModel.Status, inputModel.Barcode, inputModel.Description, inputModel.Stock);
+            command.CompanyId = User.GetCompanyId();
 
             var response = await mediator.Send(command, cancellationToken);
             if(response.IsFailure)
@@ -51,9 +50,10 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductInputModel product, CancellationToken cancellationToken)
+        public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductCommand command, CancellationToken cancellationToken)
         {
-            var command = EditProductCommand.CreateCommand(User.GetCompanyId(), id, product.Status, product.Description);
+            command.CompanyId = User.GetCompanyId();
+            command.Id = id;
 
             var response = await mediator.Send(command, cancellationToken);
 
