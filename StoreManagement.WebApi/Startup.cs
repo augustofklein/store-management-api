@@ -90,6 +90,7 @@ namespace StoreManagement.WebApi
             services.AddServices();
             services.AddRepositories();
             services.AddValidations();
+            services.AddMapper();
 
             services.AddTransient(typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehavior<,>));

@@ -1,3 +1,4 @@
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
@@ -7,7 +8,7 @@ using StoreManagement.Infrastructure.DBContext.Model;
 
 namespace StoreManagement.Infrastructure.Repository.Product
 {
-    public class ProductRepository(AppDbContext dbContext) : IProductRepository
+    public class ProductRepository(AppDbContext dbContext, IMapper mapper) : IProductRepository
     {
         public async Task<Result> AddProduct(int companyId, string skuId, bool status, string barcode, string description, int stock, CancellationToken cancellationToken)
         {
@@ -79,18 +80,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             if (result.Count == 0)
                 return new Result<IEnumerable<ProductDto>>();
 
-            // TODO: Verificar para melhorar o processo DE PARA
-            var products = result.Select(r => new ProductDto
-            {
-                Id = r.Id,
-                SkuId = r.SkuId.Trim(),
-                Status = r.Status,
-                Barcode = r.Barcode,
-                Description = r.Description,
-                Stock = r.Stock
-            });
-
-            return Result.Success(products);
+            return Result.Success(mapper.Map<IEnumerable<ProductDto>>(result));
         }
 
         public async Task<bool> VerifyProductByIdExistAsync(int companyId, int id, CancellationToken cancellationToken)
