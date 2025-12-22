@@ -9,7 +9,8 @@ namespace StoreManagement.Application.Customer.Handler
 {
     public class CustomerHandler(ICustomerRepository customerRepository, ICustomerService customerService) :
         IRequestHandler<AddCustomerCommand, Result>,
-        IRequestHandler<DeleteCustomerCommand, Result>
+        IRequestHandler<DeleteCustomerCommand, Result>,
+        IRequestHandler<EditCustomerCommand, Result>
     {
         public async Task<Result> Handle(AddCustomerCommand command, CancellationToken cancellationToken)
         {
@@ -35,13 +36,37 @@ namespace StoreManagement.Application.Customer.Handler
             return Result.Success(await customerRepository.AddCustomerAsync(command.CompanyId, customer, cancellationToken));
         }
 
+        public async Task<Result> Handle(EditCustomerCommand command, CancellationToken cancellationToken)
+        {
+            var validation = await customerService.ValidateCustomerExistsByIdAsync(command.CompanyId, command.Id, cancellationToken);
+            if (validation.IsFailure)
+                return Result.Failure(validation.Error);
+            
+            var customer = new CustomerDto
+            {
+                Id = command.Id,
+                Identification = string.Empty,
+                Name = command.Name,
+                Address = command.Address,
+                CustomerContacts = [.. command.CustomerContacts.Select(c => new CustomerContactDto
+                {
+                    ContactId = 0,
+                    ContactType = c.ContactType,
+                    Description = string.Empty,
+                    Contact = c.ContactDescription
+                })]
+            };
+            
+            return Result.Success(await customerRepository.UpdateCustomerAsync(command.CompanyId, customer, cancellationToken));
+        }
+
         public async Task<Result> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
         {
-            var validation = await customerService.ValidateCustomerExistsByIdAsync(command.companyId, command.Id, cancellationToken);
+            var validation = await customerService.ValidateCustomerExistsByIdAsync(command.CompanyId, command.Id, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            return Result.Success(await customerRepository.DeleteCustomerAsync(command.companyId, command.Id, cancellationToken));
+            return Result.Success(await customerRepository.DeleteCustomerAsync(command.CompanyId, command.Id, cancellationToken));
         }
     }
 }

@@ -4,12 +4,13 @@ using StoreManagement.Application.Customer.Model.Dto;
 
 namespace StoreManagement.Application.Customer.Command
 {
-    public class AddCustomerCommand(string identification, string name, string address, List<CustomerContactCommandDto> customerContacts) : IRequest<Result>
+    public class EditCustomerCommand(string name, string address, List<CustomerContactCommandDto> customerContacts) : IRequest<Result>
     {
         public int CompanyId { get; set; }
-        public string Identification { get; set; } = identification;
+        public int Id { get; set; }
         public string Name { get; set; } = name;
         public string Address { get; set; } = address;
+
         public List<CustomerContactCommandDto> CustomerContacts { get; set; } = customerContacts;
     }
 }

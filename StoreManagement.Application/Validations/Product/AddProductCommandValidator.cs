@@ -1,16 +1,27 @@
 using FluentValidation;
 using StoreManagement.Application.Product.Command;
 
-namespace StoreManagement.Application.Validations.Product;
-
-public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
+namespace StoreManagement.Application.Validations.Product
 {
-    public AddProductCommandValidator()
+    public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
     {
-        RuleFor(c => c.SkuId).NotNull();
-        RuleFor(c => c.Status).NotNull();
-        RuleFor(c => c.Barcode).NotNull();
-        RuleFor(c => c.Description).NotNull();
-        RuleFor(c => c.Stock).NotNull();
+        public AddProductCommandValidator()
+        {
+            RuleFor(c => c.SkuId)
+                .NotEmpty()
+                .MaximumLength(20);
+
+            RuleFor(c => c.Barcode)
+                .NotEmpty()
+                .MaximumLength(13);
+
+            RuleFor(c => c.Description)
+                .NotEmpty()
+                .MaximumLength(50);
+
+            RuleFor(c => c.Stock)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Stock cannot be negative.");
+        }
     }
 }

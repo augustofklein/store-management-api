@@ -13,18 +13,6 @@ namespace StoreManagement.WebApi.Controllers
     [Route("v{version:ApiVersion}/[controller]")]
     public class ProductController(IMediator mediator, IProductRepository productRepository) : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
-        {
-            var response = await productRepository.GetProducts(User.GetCompanyId(), cancellationToken);
-            if (response.Value == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(response.Value);
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] AddProductCommand command, CancellationToken cancellationToken)
         {
@@ -38,7 +26,7 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> RemoveProduct(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
         {
             var command = RemoveProductCommand.CreateCommand(User.GetCompanyId(), id);
 
@@ -61,6 +49,18 @@ namespace StoreManagement.WebApi.Controllers
                 return BadRequest(response.Error);
 
             return NoContent();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProducts(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
+        {
+            var response = await productRepository.GetProducts(User.GetCompanyId(), pageNumber, pageSize, cancellationToken);
+            if (response.Value == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response.Value);
         }
     }
 }

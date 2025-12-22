@@ -25,6 +25,19 @@ namespace StoreManagement.WebApi.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditCustomer(int id, [FromBody] EditCustomerCommand command, CancellationToken cancellationToken)
+        {
+            command.CompanyId = User.GetCompanyId();
+            command.Id = id;
+
+            var response = await mediator.Send(command, cancellationToken);
+            if (response.IsFailure)
+                return BadRequest(response.Error);
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id, CancellationToken cancellationToken)
         {

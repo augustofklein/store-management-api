@@ -68,10 +68,12 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> GetProducts(int companyId, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<ProductDto>>> GetProducts(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             var result = await dbContext.Products
                 .Where(p => p.CompanyId == companyId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
             if (result.Count == 0)

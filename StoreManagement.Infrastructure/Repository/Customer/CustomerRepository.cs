@@ -73,6 +73,32 @@ namespace StoreManagement.Infrastructure.Repository.Customer
             return true;
         }
 
+        public async Task<bool> UpdateCustomerAsync(int companyId, CustomerDto customer, CancellationToken cancellationToken)
+        {
+            var customerEntity = await dbContext.Customers
+                .Include(c => c.CustomerContacts)
+                .Where(c => c.CompanyId == companyId && c.Id == customer.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (customerEntity == null)
+                return false;
+
+            customerEntity.Name = customer.Name;
+            customerEntity.Address = customer.Address;
+            
+            dbContext.CustomerContacts.RemoveRange(customerEntity.CustomerContacts);
+            customerEntity.CustomerContacts = [.. customer.CustomerContacts.Select(c =>
+                new CustomerContactEntity
+                {
+                    ContactTypeId = c.ContactType,
+                    Contact = c.Contact
+                })];
+            
+            await dbContext.SaveChangesAsync(cancellationToken);
+            
+            return true;
+        }
+
         public async Task<bool> DeleteCustomerAsync(int companyId, int customerId, CancellationToken cancellationToken)
         {
             var customerEntity = await dbContext.Customers

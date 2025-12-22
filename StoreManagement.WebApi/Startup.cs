@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StoreManagement.Application.Auth.Model;
 using StoreManagement.Infrastructure.DBContext;
+using StoreManagement.WebApi.Behaviors;
 using StoreManagement.WebApi.DependencyInjection;
+using StoreManagement.WebApi.Middlewares;
 using System.Text;
 
 namespace StoreManagement.WebApi
@@ -58,7 +61,6 @@ namespace StoreManagement.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-                // Add basic auth definition
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -68,7 +70,6 @@ namespace StoreManagement.WebApi
                     Scheme = "Bearer"
                 });
 
-                // Apply the definition globally
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -90,6 +91,9 @@ namespace StoreManagement.WebApi
             services.AddRepositories();
             services.AddValidations();
 
+            services.AddTransient(typeof(IPipelineBehavior<,>),
+                typeof(ValidationBehavior<,>));
+
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
         }
 
@@ -109,6 +113,7 @@ namespace StoreManagement.WebApi
 
             app.UseEndpoints(endpoints =>
             {
+                app.UseMiddleware<ValidationExceptionMiddleware>();
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
