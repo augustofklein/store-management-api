@@ -25,18 +25,6 @@ namespace StoreManagement.WebApi.Controllers
             return Created();
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
-        {
-            var command = RemoveProductCommand.CreateCommand(User.GetCompanyId(), id);
-
-            var response = await mediator.Send(command, cancellationToken);
-            if(response.IsFailure)
-                return BadRequest(response.Error);
-
-            return NoContent();
-        }
-
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> EditProduct(int id, [FromBody] EditProductCommand command, CancellationToken cancellationToken)
         {
@@ -45,6 +33,18 @@ namespace StoreManagement.WebApi.Controllers
 
             var response = await mediator.Send(command, cancellationToken);
 
+            if (response.IsFailure)
+                return BadRequest(response.Error);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
+        {
+            var command = RemoveProductCommand.CreateCommand(User.GetCompanyId(), id);
+
+            var response = await mediator.Send(command, cancellationToken);
             if(response.IsFailure)
                 return BadRequest(response.Error);
 

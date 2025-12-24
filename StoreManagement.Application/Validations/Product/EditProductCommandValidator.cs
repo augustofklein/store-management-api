@@ -9,7 +9,9 @@ namespace StoreManagement.Application.Validations.Product
         {
             RuleFor(c => c.Description)
                 .NotEmpty()
-                .MaximumLength(50);
+                .WithMessage("Description is required.")
+                .MaximumLength(50)
+                .WithMessage("Description must not exceed 50 characters.");
         }
     }
 }

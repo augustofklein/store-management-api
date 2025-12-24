@@ -3,6 +3,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Model;
+using StoreManagement.Domain.Entities;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.Infrastructure.DBContext.Model;
 
@@ -10,7 +11,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
 {
     public class ProductRepository(AppDbContext dbContext, IMapper mapper) : IProductRepository
     {
-        public async Task<Result> AddProduct(int companyId, string skuId, bool status, string barcode, string description, int stock, CancellationToken cancellationToken)
+        public async Task<Result> AddProduct(int companyId, string skuId, bool status, string barcode, string description, int stock, decimal price, CancellationToken cancellationToken)
         {
             var product = new ProductEntity
             {
@@ -20,7 +21,11 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 Status = status,
                 Barcode = barcode,
                 Description = description,
-                Stock = stock
+                Stock = stock,
+                ProductPrice = new ProductPriceEntity
+                {
+                    Price = price
+                }
             };
 
             await dbContext.Products.AddAsync(product, cancellationToken);
@@ -71,16 +76,20 @@ namespace StoreManagement.Infrastructure.Repository.Product
 
         public async Task<Result<IEnumerable<ProductDto>>> GetProducts(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            var result = await dbContext.Products
+            return await dbContext.Products
+                .AsNoTracking()
                 .Where(p => p.CompanyId == companyId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    SkuId = p.SkuId,
+                    Description = p.Description,
+                    Stock = p.Stock,
+                    Price = p.ProductPrice.Price
+                })
                 .ToListAsync(cancellationToken);
-
-            if (result.Count == 0)
-                return new Result<IEnumerable<ProductDto>>();
-
-            return Result.Success(mapper.Map<IEnumerable<ProductDto>>(result));
         }
 
         public async Task<bool> VerifyProductByIdExistAsync(int companyId, int id, CancellationToken cancellationToken)

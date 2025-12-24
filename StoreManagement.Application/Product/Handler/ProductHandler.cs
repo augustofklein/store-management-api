@@ -17,7 +17,7 @@ namespace StoreManagement.Application.Product.Handler
             if(validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            var result = await productRepository.AddProduct(command.CompanyId, command.SkuId, command.Status, command.Barcode, command.Description, command.Stock, cancellationToken);
+            var result = await productRepository.AddProduct(command.CompanyId, command.SkuId, command.Status, command.Barcode, command.Description, command.Stock, command.Price, cancellationToken);
             if(result.IsFailure)
                 return Result.Failure(result.Error);
 

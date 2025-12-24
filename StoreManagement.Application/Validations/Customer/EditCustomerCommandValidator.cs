@@ -8,6 +8,8 @@ namespace StoreManagement.Application.Validations.Customer
         public EditCustomerCommandValidator()
         {
             RuleFor(c => c.Id)
+                .NotEmpty()
+                .WithMessage("Id is required.")
                 .GreaterThan(0)
                 .WithMessage("Customer Id must be greater than zero.");
 

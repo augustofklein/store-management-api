@@ -32,6 +32,17 @@ CREATE TABLE products (
         ON DELETE CASCADE
 );
 
+CREATE TABLE product_price (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+
+    CONSTRAINT fk_product_price_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(id)
+        ON DELETE CASCADE
+);
+
 CREATE TABLE customers (
     company_id INTEGER NOT NULL,
     id SERIAL PRIMARY KEY,

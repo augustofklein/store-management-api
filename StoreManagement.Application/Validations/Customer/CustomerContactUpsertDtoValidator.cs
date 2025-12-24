@@ -8,6 +8,8 @@ namespace StoreManagement.Application.Validations.Customer
         public CustomerContactUpsertDtoValidator()
         {
             RuleFor(c => c.ContactType)
+                .NotEmpty()
+                .WithMessage("Contact type is required.")
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Contact type must be greater than zero.");
 

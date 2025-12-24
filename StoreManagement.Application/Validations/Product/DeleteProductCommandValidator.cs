@@ -7,12 +7,10 @@ namespace StoreManagement.Application.Validations.Product
     {
         public DeleteProductCommandValidator()
         {
-            RuleFor(command => command.CompanyId)
-                .GreaterThan(0)
-                .WithMessage("Company ID must be greater than zero.");
-
             RuleFor(command => command.Id)
-                .GreaterThan(0)
+                .NotEmpty()
+                .WithMessage("Id is required.")
+                .GreaterThanOrEqualTo(0)
                 .WithMessage("Product ID must be greater than zero.");
         }
     }

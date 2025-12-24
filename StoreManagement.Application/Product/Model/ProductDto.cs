@@ -8,8 +8,9 @@ namespace StoreManagement.Application.Product.Model
         public string Barcode { get; set; }
         public string Description { get; set; }
         public int Stock { get; set; }
+        public decimal Price { get; set; }
 
-        public ProductDto(int id, string skuId, bool status, string barcode, string description, int stock)
+        public ProductDto(int id, string skuId, bool status, string barcode, string description, int stock, decimal price)
         {
             Id = id;
             SkuId = skuId;
@@ -17,6 +18,7 @@ namespace StoreManagement.Application.Product.Model
             Barcode = barcode;
             Description = description;
             Stock = stock;
+            Price = price;
         }
 
         public ProductDto()
@@ -27,6 +29,7 @@ namespace StoreManagement.Application.Product.Model
             Barcode = string.Empty;
             Description = string.Empty;
             Stock = default;
+            Price = default;
         }
     }
 }

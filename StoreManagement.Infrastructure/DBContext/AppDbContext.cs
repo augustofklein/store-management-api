@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using StoreManagement.Domain.Entities;
 using StoreManagement.Infrastructure.DBContext.EntityFramework.Configurations;
 using StoreManagement.Infrastructure.DBContext.Model;
 
@@ -8,6 +9,7 @@ namespace StoreManagement.Infrastructure.DBContext
     {
         public required DbSet<UserEntity> Users { get; set; }
         public required DbSet<ProductEntity> Products { get; set; }
+        public required DbSet<ProductPriceEntity> ProductPrice { get; set; }
         public required DbSet<CustomerEntity> Customers { get; set; }
         public required DbSet<CustomerContactEntity> CustomerContacts { get; set; }
         public required DbSet<ContactTypeEntity> ContactType { get; set; }
@@ -16,6 +18,7 @@ namespace StoreManagement.Infrastructure.DBContext
         {
             modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductPriceTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerContactTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ContactTypeConfiguration());
