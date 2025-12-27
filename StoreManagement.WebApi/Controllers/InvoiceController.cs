@@ -30,7 +30,7 @@ namespace StoreManagement.WebApi.Controllers
         public async Task<IActionResult> GetInvoices(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
         {
             var response = await invoiceRepository.ReturnAllInvoicesAsync(User.GetCompanyId(), pageNumber, pageSize, cancellationToken);
-            if (response.Value == null)
+            if (!response.Value.Any())
             {
                 return NotFound();
             }

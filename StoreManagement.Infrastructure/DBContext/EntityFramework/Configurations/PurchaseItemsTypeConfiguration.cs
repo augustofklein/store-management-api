@@ -4,16 +4,16 @@ using StoreManagement.Domain.Entities;
 
 namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configurations
 {
-    public class InvoiceItemsTypeConfiguration : IEntityTypeConfiguration<InvoiceItemEntity>
+    public class PurchaseItemsTypeConfiguration : IEntityTypeConfiguration<PurchaseItemEntity>
     {
-        public void Configure(EntityTypeBuilder<InvoiceItemEntity> builder)
+        public void Configure(EntityTypeBuilder<PurchaseItemEntity> builder)
         {
-            builder.ToTable("invoice_items");
+            builder.ToTable("purchase_items");
 
             builder.HasKey(i => i.Id);
 
-            builder.Property(i => i.InvoiceId)
-                .HasColumnName("invoice_id")
+            builder.Property(i => i.PurchaseId)
+                .HasColumnName("purchase_id")
                 .HasColumnType("integer");
 
             builder.Property(i => i.ProductId)
@@ -34,13 +34,18 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnType("integer")
                 .IsRequired();
 
-            builder.HasOne(c => c.Invoice)
-               .WithMany(c => c.InvoiceItems)
-               .HasForeignKey(c => c.InvoiceId)
+            builder.Property(i => i.Package)
+                .HasColumnName("package")
+                .HasColumnType("integer")
+                .IsRequired();
+
+            builder.HasOne(c => c.Purchase)
+               .WithMany(c => c.PurchaseItems)
+               .HasForeignKey(c => c.PurchaseId)
                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(c => c.Product)
-               .WithMany(c => c.InvoiceItems)
+               .WithMany(c => c.PurchaseItems)
                .HasForeignKey(c => c.ProductId)
                .OnDelete(DeleteBehavior.Restrict);
         }

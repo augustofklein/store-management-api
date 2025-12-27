@@ -4,28 +4,33 @@ using StoreManagement.Domain.Entities;
 
 namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configurations
 {
-    public class InvoiceTypeConfiguration : IEntityTypeConfiguration<InvoiceEntity>
+    public class PurchaseTypeConfiguration : IEntityTypeConfiguration<PurchaseEntity>
     {
-        public void Configure(EntityTypeBuilder<InvoiceEntity> builder)
+        public void Configure(EntityTypeBuilder<PurchaseEntity> builder)
         {
-            builder.ToTable("invoices");
-            
+            builder.ToTable("purchases");
+
             builder.HasKey(i => i.Id);
-            
+
             builder.Property(i => i.CompanyId)
                 .HasColumnName("company_id")
                 .HasColumnType("integer");
 
-            builder.Property(i => i.CustomerId)
-                .HasColumnName("customer_id")
+            builder.Property(i => i.SupplierId)
+                .HasColumnName("supplier_id")
                 .HasColumnType("integer");
 
             builder.Property(i => i.Id)
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
-            
-            builder.Property(i => i.InvoiceDate)
-                .HasColumnName("invoice_date")
+
+            builder.Property(p => p.DocumentKey)
+                .HasColumnName("document_key")
+                .HasColumnType("varchar(44)")
+                .IsRequired();
+
+            builder.Property(i => i.PurchaseDate)
+                .HasColumnName("purchase_date")
                 .HasColumnType("timestamp")
                 .IsRequired();
 
@@ -35,13 +40,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .IsRequired();
 
             builder.HasOne(c => c.Company)
-               .WithMany(c => c.Invoices)
+               .WithMany(c => c.Purchases)
                .HasForeignKey(c => c.CompanyId)
                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(c => c.Customer)
-               .WithMany(c => c.Invoices)
-               .HasForeignKey(c => c.CustomerId)
+            builder.HasOne(c => c.Supplier)
+               .WithMany(c => c.Purchases)
+               .HasForeignKey(c => c.SupplierId)
                .OnDelete(DeleteBehavior.Restrict);
         }
     }

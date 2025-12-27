@@ -24,4 +24,10 @@
     <ProjectReference Include="..\StoreManagement.Domain\StoreManagement.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Purchase\Command\" />
+    <Folder Include="Purchase\Handler\" />
+    <Folder Include="Purchase\Service\" />
+  </ItemGroup>
+
 </Project>
