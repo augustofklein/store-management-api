@@ -33,6 +33,8 @@ namespace StoreManagement.WebApi
 
             services.AddControllers();
 
+            var jwtSection = configuration.GetRequiredSection("Jwt");
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -42,9 +44,11 @@ namespace StoreManagement.WebApi
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidAudience = configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                    ValidIssuer = jwtSection.GetValue<string>("Issuer"),
+                    ValidAudience = jwtSection.GetValue<string>("Audience"),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtSection.GetValue<string>("Key")!)
+                    )
                 };
             });
 
