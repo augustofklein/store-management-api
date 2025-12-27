@@ -118,3 +118,15 @@ CREATE TABLE invoice_items (
 
 CREATE INDEX idx_invoice_items_invoice_id ON invoice_items (invoice_id);
 CREATE INDEX idx_invoice_items_product_id ON invoice_items (product_id);
+
+CREATE TABLE suppliers (
+    company_id INTEGER NOT NULL,
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    identification VARCHAR(18) NOT NULL,
+
+    CONSTRAINT fk_suppliers_company
+        FOREIGN KEY (company_id)
+        REFERENCES companies(id)
+        ON DELETE CASCADE
+);
