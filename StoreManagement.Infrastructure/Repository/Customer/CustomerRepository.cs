@@ -68,9 +68,9 @@ namespace StoreManagement.Infrastructure.Repository.Customer
             };
 
             await dbContext.Customers.AddAsync(customerEntity, cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            var result = await dbContext.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return result > 0;
         }
 
         public async Task<bool> UpdateCustomerAsync(int companyId, CustomerDto customer, CancellationToken cancellationToken)

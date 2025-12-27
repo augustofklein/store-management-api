@@ -13,6 +13,8 @@ namespace StoreManagement.Infrastructure.DBContext
         public required DbSet<CustomerEntity> Customers { get; set; }
         public required DbSet<CustomerContactEntity> CustomerContacts { get; set; }
         public required DbSet<ContactTypeEntity> ContactType { get; set; }
+        public required DbSet<InvoiceEntity> Invoice { get; set; }
+        public required DbSet<InvoiceItemEntity> InvoiceItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +24,8 @@ namespace StoreManagement.Infrastructure.DBContext
             modelBuilder.ApplyConfiguration(new CustomerTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerContactTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ContactTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new InvoiceTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new InvoiceItemsTypeConfiguration());
         }
     }
 }

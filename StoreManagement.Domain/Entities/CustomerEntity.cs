@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Infrastructure.DBContext.Model
+﻿using StoreManagement.Domain.Entities;
+
+namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class CustomerEntity
     {
@@ -8,7 +10,8 @@
         public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
 
-        public virtual CompanyEntity Company { get; set; }
+        public virtual CompanyEntity Company { get; set; } = null!;
         public virtual ICollection<CustomerContactEntity> CustomerContacts { get; set; } = [];
+        public virtual ICollection<InvoiceEntity> Invoices { get; set; } = [];
     }
 }

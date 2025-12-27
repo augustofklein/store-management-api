@@ -7,6 +7,6 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
 
-        public virtual CompanyEntity Company { get; set; }
+        public virtual CompanyEntity Company { get; set; } = null!;
     }
 }

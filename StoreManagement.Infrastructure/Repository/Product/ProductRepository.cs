@@ -9,7 +9,7 @@ using StoreManagement.Infrastructure.DBContext.Model;
 
 namespace StoreManagement.Infrastructure.Repository.Product
 {
-    public class ProductRepository(AppDbContext dbContext, IMapper mapper) : IProductRepository
+    public class ProductRepository(AppDbContext dbContext) : IProductRepository
     {
         public async Task<Result> AddProduct(int companyId, string skuId, bool status, string barcode, string description, int stock, decimal price, CancellationToken cancellationToken)
         {
@@ -85,6 +85,8 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 {
                     Id = p.Id,
                     SkuId = p.SkuId,
+                    Status = p.Status,
+                    Barcode = p.Barcode,
                     Description = p.Description,
                     Stock = p.Stock,
                     Price = p.ProductPrice.Price
@@ -104,6 +106,22 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return await dbContext.Products
                 .Where(p => p.CompanyId == companyId && p.SkuId == skuId)
                 .FirstOrDefaultAsync(cancellationToken) != null;
+        }
+
+        public async Task<Result> VerifyArrayProductsExistAsync(int companyId, IEnumerable<int> productIds, CancellationToken cancellationToken)
+        {
+            var existingProductIds = await dbContext.Products
+                .AsNoTracking()
+                .Where(p => p.CompanyId == companyId && productIds.Contains(p.Id))
+                .Select(p => p.Id)
+                .ToListAsync(cancellationToken);
+
+            var missingProductIds = productIds.Except(existingProductIds).ToList();
+
+            if (missingProductIds.Count != 0)
+                return Result.Failure($"The following product IDs do not exist: {string.Join(", ", missingProductIds)}");
+            
+            return Result.Success();
         }
     }
 }

@@ -11,5 +11,6 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<Result<IEnumerable<ProductDto>>> GetProducts(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken);
         Task<bool> VerifyProductByIdExistAsync(int companyId, int id, CancellationToken cancellationToken);
         Task<bool> VerifyProductBySkuIdExistAsync(int companyId, string skuId, CancellationToken cancellationToken);
+        Task<Result> VerifyArrayProductsExistAsync(int companyId, IEnumerable<int> productIds, CancellationToken cancellationToken);
     }
 }

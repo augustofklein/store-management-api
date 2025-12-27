@@ -11,7 +11,7 @@ namespace StoreManagement.Application.Validations.Customer
                 .NotEmpty()
                 .WithMessage("Contact type is required.")
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Contact type must be greater than zero.");
+                .WithMessage("Contact type must be greater or equal to zero.");
 
             RuleFor(c => c.ContactDescription)
                 .NotEmpty()

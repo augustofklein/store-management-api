@@ -7,7 +7,7 @@
         public int Id { get; set; }
         public string Contact { get; set; } = string.Empty;
 
-        public virtual CustomerEntity Customer { get; set; }
-        public virtual ContactTypeEntity ContactType { get; set; }
+        public virtual CustomerEntity Customer { get; set; } = null!;
+        public virtual ContactTypeEntity ContactType { get; set; } = null!;
     }
 }

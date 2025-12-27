@@ -14,5 +14,6 @@ namespace StoreManagement.Infrastructure.DBContext.Model
 
         public virtual CompanyEntity Company { get; set; } = null!;
         public ProductPriceEntity ProductPrice { get; set; } = null!;
+        public ICollection<InvoiceItemEntity> InvoiceItems { get; set; } = [];
     }
 }

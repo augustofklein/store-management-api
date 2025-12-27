@@ -1,4 +1,6 @@
-﻿namespace StoreManagement.Infrastructure.DBContext.Model
+﻿using StoreManagement.Domain.Entities;
+
+namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class CompanyEntity
     {
@@ -8,5 +10,6 @@
         public required ICollection<UserEntity> Users { get; set; }
         public required ICollection<ProductEntity> Products { get; set; }
         public required ICollection<CustomerEntity> Customers { get; set; }
+        public required ICollection<InvoiceEntity> Invoices { get; set; }
     }
 }
