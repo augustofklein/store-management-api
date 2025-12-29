@@ -3,6 +3,7 @@ using StoreManagement.Infrastructure.Repository.Customer;
 using StoreManagement.Infrastructure.Repository.Invoice;
 using StoreManagement.Infrastructure.Repository.Product;
 using StoreManagement.Infrastructure.Repository.Purchase;
+using StoreManagement.Infrastructure.Repository.Supplier;
 
 namespace StoreManagement.WebApi.DependencyInjection
 {
@@ -14,6 +15,7 @@ namespace StoreManagement.WebApi.DependencyInjection
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IPurchaseRepository, PurchaseRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
 
             return services;
         }
