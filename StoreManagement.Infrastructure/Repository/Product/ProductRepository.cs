@@ -11,7 +11,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
 {
     public class ProductRepository(AppDbContext dbContext) : IProductRepository
     {
-        public async Task<Result> AddProduct(int companyId, string skuId, bool status, string barcode, string description, int stock, decimal price, CancellationToken cancellationToken)
+        public async Task<Result> AddProductAsync(int companyId, string skuId, bool status, string barcode, string description, int stock, decimal price, CancellationToken cancellationToken)
         {
             var product = new ProductEntity
             {
@@ -34,7 +34,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task<Result> RemoveProduct(int companyId, int id, CancellationToken cancellationToken)
+        public async Task<Result> DeleteProductAsync(int companyId, int id, CancellationToken cancellationToken)
         {
             var product = await dbContext.Products
                 .FirstOrDefaultAsync(
@@ -53,7 +53,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task<Result> EditProduct(int companyId, int id, bool status, string description, CancellationToken cancellationToken)
+        public async Task<Result> EditProductAsync(int companyId, int id, bool status, string description, CancellationToken cancellationToken)
         {
             var product = await dbContext.Products
                 .FirstOrDefaultAsync(
@@ -74,7 +74,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> GetProducts(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<ProductDto>>> GetProductsAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Products
                 .AsNoTracking()

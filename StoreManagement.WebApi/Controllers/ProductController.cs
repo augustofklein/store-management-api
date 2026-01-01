@@ -54,7 +54,7 @@ namespace StoreManagement.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
         {
-            var response = await productRepository.GetProducts(User.GetCompanyId(), pageNumber, pageSize, cancellationToken);
+            var response = await productRepository.GetProductsAsync(User.GetCompanyId(), pageNumber, pageSize, cancellationToken);
             if (!response.Value.Any())
             {
                 return NotFound();

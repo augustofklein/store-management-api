@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Contracts.Persistence;
-using StoreManagement.Infrastructure.Repository.Customer;
+using StoreManagement.Application.Supplier.Command;
 using StoreManagement.WebApi.Extensions;
 
 namespace StoreManagement.WebApi.Controllers
@@ -10,7 +11,7 @@ namespace StoreManagement.WebApi.Controllers
     [Authorize]
     [ApiVersion("1")]
     [Route("v{version:ApiVersion}/[controller]")]
-    public class SupplierController(ISupplierRepository supplierRepository) : ControllerBase
+    public class SupplierController(ISupplierRepository supplierRepository, IMediator mediator) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetSuppliers(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
@@ -23,5 +24,18 @@ namespace StoreManagement.WebApi.Controllers
 
             return Ok(response.Value);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSupplier(int id, CancellationToken cancellationToken)
+        {
+            var command = new DeleteSupplierCommand(User.GetCompanyId(), id);
+
+            var response = await mediator.Send(command, cancellationToken);
+            if (response.IsFailure)
+                return BadRequest(response.Error);
+
+            return NoContent();
+        }
+
     }
 }

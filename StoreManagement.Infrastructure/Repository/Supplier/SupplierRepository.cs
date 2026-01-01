@@ -22,5 +22,36 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
                     Name = i.Name,
                 }).ToListAsync(cancellationToken);
         }
+
+        public async Task<bool> ValidatePurchaseLinkedAsync(int companyId, int supplierId, CancellationToken cancellationToken)
+        {
+            return await dbContext.Purchase
+                .AsNoTracking()
+                .Where(i => i.CompanyId == companyId && i.SupplierId == supplierId)
+                .FirstOrDefaultAsync(cancellationToken) != null;
+        }
+
+        public async Task<Result> DeleteSupplierAsync(int companyId, int supplierId, CancellationToken cancellationToken)
+        {
+            var supplier = await dbContext.Supplier
+                .Where(i => i.CompanyId == companyId && i.Id == supplierId)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (supplier == null)
+                return Result.Failure($"Supplier with ID {supplierId} not found.");
+
+            dbContext.Supplier.Remove(supplier);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
+        }
+
+        public async Task<bool> ValidateExistSupplierAsync(int companyId, int supplierId, CancellationToken cancellationToken)
+        {
+            return await dbContext.Supplier
+                .AsNoTracking()
+                .Where(i => i.CompanyId == companyId && i.Id == supplierId)
+                .FirstOrDefaultAsync(cancellationToken) != null;
+        }
     }
 }

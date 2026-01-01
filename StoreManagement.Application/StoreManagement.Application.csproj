@@ -28,9 +28,6 @@
     <Folder Include="Purchase\Command\" />
     <Folder Include="Purchase\Handler\" />
     <Folder Include="Purchase\Service\" />
-    <Folder Include="Supplier\Command\" />
-    <Folder Include="Supplier\Handler\" />
-    <Folder Include="Supplier\Service\" />
   </ItemGroup>
 
 </Project>

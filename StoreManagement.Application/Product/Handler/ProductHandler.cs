@@ -17,7 +17,7 @@ namespace StoreManagement.Application.Product.Handler
             if(validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            var result = await productRepository.AddProduct(command.CompanyId, command.SkuId, command.Status, command.Barcode, command.Description, command.Stock, command.Price, cancellationToken);
+            var result = await productRepository.AddProductAsync(command.CompanyId, command.SkuId, command.Status, command.Barcode, command.Description, command.Stock, command.Price, cancellationToken);
             if(result.IsFailure)
                 return Result.Failure(result.Error);
 
@@ -30,7 +30,7 @@ namespace StoreManagement.Application.Product.Handler
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            var result = await productRepository.RemoveProduct(command.CompanyId, command.Id, cancellationToken);
+            var result = await productRepository.DeleteProductAsync(command.CompanyId, command.Id, cancellationToken);
             if(result.IsFailure)
                 return Result.Failure(result.Error);
 
@@ -43,7 +43,7 @@ namespace StoreManagement.Application.Product.Handler
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            var result = await productRepository.EditProduct(command.CompanyId, command.Id, command.Status, command.Description, cancellationToken);
+            var result = await productRepository.EditProductAsync(command.CompanyId, command.Id, command.Status, command.Description, cancellationToken);
             if(result.IsFailure)
                 return Result.Failure(result.Error);
 
