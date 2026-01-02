@@ -18,15 +18,15 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.Property(s => s.Id)
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
-            
-            builder.Property(s => s.Name)
-                .HasColumnName("name")
-                .HasColumnType("varchar(100)")
-                .IsRequired();
 
             builder.Property(s => s.Identification)
                 .HasColumnName("identification")
                 .HasColumnType("varchar(18)")
+                .IsRequired();
+
+            builder.Property(s => s.Name)
+                .HasColumnName("name")
+                .HasColumnType("varchar(100)")
                 .IsRequired();
         }
     }

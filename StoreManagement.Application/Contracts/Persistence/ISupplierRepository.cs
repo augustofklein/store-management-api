@@ -9,5 +9,6 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<bool> ValidatePurchaseLinkedAsync(int companyId, int supplierId, CancellationToken cancellationToken);
         Task<Result> DeleteSupplierAsync(int companyId, int supplierId, CancellationToken cancellationToken);
         Task<bool> ValidateExistSupplierAsync(int companyId, int supplierId, CancellationToken cancellationToken);
+        Task<Result> AddSupplierAsync(int companyId, AddSupplierDto addSupplier, CancellationToken cancellationToken);
     }
 }

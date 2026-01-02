@@ -15,5 +15,11 @@ namespace StoreManagement.Application.Supplier.Service
 
             return Result.Success();
         }
+
+        public async Task<Result> ValidateAddSupplierAsync(int companyId, string identification, CancellationToken cancellationToken)
+        {
+            // Implement validation logic for adding a supplier if needed
+            return Result.Success();
+        }
     }
 }

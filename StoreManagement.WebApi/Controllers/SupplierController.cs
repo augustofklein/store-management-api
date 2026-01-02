@@ -37,5 +37,17 @@ namespace StoreManagement.WebApi.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddSupplier([FromBody] AddSupplierCommand command, CancellationToken cancellationToken)
+        {
+            command.CompanyId = User.GetCompanyId();
+
+            var response = await mediator.Send(command, cancellationToken);
+            if (response.IsFailure)
+                return BadRequest(response.Error);
+            
+            return NoContent();
+        }
+
     }
 }

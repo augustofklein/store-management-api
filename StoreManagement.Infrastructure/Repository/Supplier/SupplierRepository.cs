@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Supplier.Model;
+using StoreManagement.Domain.Entities;
 using StoreManagement.Infrastructure.DBContext;
 
 namespace StoreManagement.Infrastructure.Repository.Supplier
@@ -52,6 +53,21 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
                 .AsNoTracking()
                 .Where(i => i.CompanyId == companyId && i.Id == supplierId)
                 .FirstOrDefaultAsync(cancellationToken) != null;
+        }
+
+        public async Task<Result> AddSupplierAsync(int companyId, AddSupplierDto addSupplier, CancellationToken cancellationToken)
+        {
+            var supplier = new SupplierEntity
+            {
+                CompanyId = companyId,
+                Identification = addSupplier.Identification,
+                Name = addSupplier.Name
+            };
+
+            await dbContext.Supplier.AddAsync(supplier, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
         }
     }
 }
