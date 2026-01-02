@@ -21,7 +21,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(s => s.Identification)
                 .HasColumnName("identification")
-                .HasColumnType("varchar(18)")
+                .HasColumnType("varchar(14)")
                 .IsRequired();
 
             builder.Property(s => s.Name)

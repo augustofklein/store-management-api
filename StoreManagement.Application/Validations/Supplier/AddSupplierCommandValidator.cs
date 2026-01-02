@@ -10,8 +10,8 @@ namespace StoreManagement.Application.Validations.Supplier
             RuleFor(x => x.Identification)
                 .NotEmpty()
                 .WithMessage("Identification is required.")
-                .MaximumLength(50)
-                .WithMessage("Identification must not exceed 18 characters.");
+                .MaximumLength(14)
+                .WithMessage("Identification must not exceed 14 characters.");
 
             RuleFor(x => x.Name)
                 .NotEmpty()
