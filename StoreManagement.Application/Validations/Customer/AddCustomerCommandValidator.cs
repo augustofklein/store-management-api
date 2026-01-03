@@ -9,9 +9,9 @@ namespace StoreManagement.Application.Validations.Customer
         {
             RuleFor(c => c.Identification)
                 .NotEmpty()
-                .WithMessage("Sku Id is required.")
-                .MaximumLength(18)
-                .WithMessage("Sku Id must not exceed 18 characters.");
+                .WithMessage("Identification is required.")
+                .MaximumLength(11)
+                .WithMessage("Identification must not exceed 11 characters.");
 
             RuleFor(c => c.Name)
                 .NotEmpty()

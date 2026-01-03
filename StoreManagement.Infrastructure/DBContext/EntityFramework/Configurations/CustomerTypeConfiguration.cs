@@ -23,7 +23,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(c => c.Identification)
                 .HasColumnName("identification")
-                .HasColumnType("varchar(18)");
+                .HasColumnType("varchar(11)");
             
             builder.Property(c => c.Name)
                 .HasColumnName("name")
