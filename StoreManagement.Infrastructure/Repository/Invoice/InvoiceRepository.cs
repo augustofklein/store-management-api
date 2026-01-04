@@ -42,7 +42,7 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
                 }).ToListAsync(cancellationToken);
         }
 
-        public async Task<bool> AddInvoiceAsync(AddInvoiceDto invoice, CancellationToken cancellationToken)
+        public async Task AddInvoiceAsync(AddInvoiceDto invoice, CancellationToken cancellationToken)
         {
             var invoiceEntity = new InvoiceEntity
             {
@@ -62,8 +62,6 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
             };
 
             await dbContext.Invoice.AddAsync(invoiceEntity, cancellationToken);
-            var result = await dbContext.SaveChangesAsync(cancellationToken);
-            return result > 0;
         }
     }
 }

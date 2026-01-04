@@ -16,5 +16,6 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public ProductPriceEntity ProductPrice { get; set; } = null!;
         public ICollection<InvoiceItemEntity> InvoiceItems { get; set; } = [];
         public ICollection<PurchaseItemEntity> PurchaseItems { get; set; } = [];
+        public ICollection<ProductMovementEntity> ProductMovements { get; set; } = [];
     }
 }

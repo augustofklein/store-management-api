@@ -18,6 +18,7 @@ namespace StoreManagement.Infrastructure.DBContext
         public required DbSet<PurchaseEntity> Purchase { get; set; }
         public required DbSet<PurchaseItemEntity> PurchaseItems { get; set; }
         public required DbSet<SupplierEntity> Supplier { get; set; }
+        public required DbSet<ProductMovementEntity> ProductMovements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +33,7 @@ namespace StoreManagement.Infrastructure.DBContext
             modelBuilder.ApplyConfiguration(new PurchaseTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PurchaseItemsTypeConfiguration());
             modelBuilder.ApplyConfiguration(new SupplierTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductMovementTypeConfiguration());
         }
     }
 }

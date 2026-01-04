@@ -5,10 +5,12 @@ using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Invoice.Command;
 using StoreManagement.Application.Invoice.Model;
 using StoreManagement.Application.Invoice.Service;
+using StoreManagement.Application.Product.Model;
+using StoreManagement.Domain.Enums;
 
 namespace StoreManagement.Application.Invoice.Handler
 {
-    public class InvoiceHandler(IInvoiceRepository invoiceRepository, IInvoiceService invoiceService, IMapper mapper) : IRequestHandler<AddInvoiceCommand, Result>
+    public class InvoiceHandler(IInvoiceRepository invoiceRepository, IProductRepository productRepository, IInvoiceService invoiceService, IMapper mapper, IEFTransactionManager eFTransactionManager) : IRequestHandler<AddInvoiceCommand, Result>
     {
         public async Task<Result> Handle(AddInvoiceCommand command, CancellationToken cancellationToken)
         {
@@ -16,7 +18,26 @@ namespace StoreManagement.Application.Invoice.Handler
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            return Result.Success(await invoiceRepository.AddInvoiceAsync(mapper.Map<AddInvoiceDto>(command), cancellationToken));
+            await eFTransactionManager.BeginAsync(cancellationToken);
+
+            try
+            {
+                await invoiceRepository.AddInvoiceAsync(mapper.Map<AddInvoiceDto>(command), cancellationToken);
+
+                await productRepository.UpdateProductStockArrayAsync(ProductMovementEnum.INVOICE, mapper.Map<List<UpdateProductStockDto>>(command.InvoiceItems), cancellationToken);
+                
+                await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.INVOICE, command.InvoiceDate, mapper.Map<List<AddProductMovementDto>>(command.InvoiceItems), cancellationToken);
+
+                await eFTransactionManager.CommitAsync(cancellationToken);
+
+                return Result.Success();
+            }
+            catch (Exception)
+            {
+                await eFTransactionManager.RollbackAsync(cancellationToken);
+                throw;
+            }
+
         }
     }
 }

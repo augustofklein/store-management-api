@@ -8,7 +8,7 @@ namespace StoreManagement.Application.Invoice.Command
     {
         public int CompanyId { get; set; }
         public int CustomerId { get; set; } = customerId;
-        public DateTime InvoiceDate { get; set; } = DateTime.Now;
+        public DateTime InvoiceDate { get; set; } = DateTimeOffset.Now.DateTime;
 
         public List<AddInvoiceItemsDto> InvoiceItems { get; set; } = invoiceItems;
     }

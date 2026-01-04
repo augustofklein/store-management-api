@@ -1,9 +1,9 @@
-using AutoMapper;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Product.Model;
 using StoreManagement.Domain.Entities;
+using StoreManagement.Domain.Enums;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.Infrastructure.DBContext.Model;
 
@@ -122,6 +122,48 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 return Result.Failure($"The following product IDs do not exist: {string.Join(", ", missingProductIds)}");
             
             return Result.Success();
+        }
+
+        public async Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTime movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken)
+        {
+            var productMovements = items.Select(ii => new ProductMovementEntity
+            {
+                ProductId = ii.ProductId,
+                MovementType = movementType,
+                Quantity = ii.Quantity,
+                Price = ii.Price,
+                CreatedAt = movementDate
+            });
+
+            await dbContext.ProductMovements.AddRangeAsync(productMovements, cancellationToken);
+        }
+
+        public async Task UpdateProductStockArrayAsync(ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken)
+        {
+            foreach (var item in items)
+            {
+                var product = await dbContext.Products
+                    .FirstOrDefaultAsync(
+                        p => p.Id == item.ProductId,
+                        cancellationToken
+                    );
+
+                if (product != null)
+                {
+                    if (movementType == ProductMovementEnum.INVOICE)
+                    {
+                        product.Stock -= item.Quantity;
+                    }
+                    else if (movementType == ProductMovementEnum.PURCHASE)
+                    {
+                        product.Stock += item.Quantity;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invalid product movement type.");
+                    }
+                }
+            }
         }
     }
 }
