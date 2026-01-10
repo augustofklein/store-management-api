@@ -26,7 +26,7 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
                     Customer = new InvoiceDto.CustomerInvoice
                     {
                         Id = i.Customer.Id,
-                        Identification = i.Customer.Identification,
+                        DocumentNumber = i.Customer.DocumentNumber,
                         Name = i.Customer.Name,
                         Address = i.Customer.Address
                     },

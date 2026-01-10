@@ -30,7 +30,7 @@ namespace StoreManagement.Application.Purchase.XML
 
             var store = new PurchasePreviewDto.StorePreviewDto
             {
-                Identification = xml
+                DocumentNumber = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -42,7 +42,7 @@ namespace StoreManagement.Application.Purchase.XML
 
             var supplier = new PurchasePreviewDto.SupplierPreviewDto
             {
-                Identification = xml
+                DocumentNumber = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?

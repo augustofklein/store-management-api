@@ -27,7 +27,7 @@ namespace StoreManagement.Application.Supplier.Handler
 
         public async Task<Result> Handle(AddSupplierCommand command, CancellationToken cancellationToken)
         {
-            var validation = await supplierService.ValidateAddSupplierAsync(command.CompanyId, command.Identification, cancellationToken);
+            var validation = await supplierService.ValidateAddSupplierAsync(command.CompanyId, command.DocumentNumber, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 

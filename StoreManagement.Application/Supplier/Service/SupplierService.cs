@@ -16,10 +16,10 @@ namespace StoreManagement.Application.Supplier.Service
             return Result.Success();
         }
 
-        public async Task<Result> ValidateAddSupplierAsync(int companyId, string identification, CancellationToken cancellationToken)
+        public async Task<Result> ValidateAddSupplierAsync(int companyId, string documentNumber, CancellationToken cancellationToken)
         {
-            if(await supplierRepository.ValidateSupplierExistsByIdentificationAsync(companyId, identification, cancellationToken))
-                return Result.Failure("Supplier with the specific identification already exists.");
+            if(await supplierRepository.ValidateSupplierExistsByDocumentNumberAsync(companyId, documentNumber, cancellationToken))
+                return Result.Failure("Supplier with the specific document number already exists.");
 
             return Result.Success();
         }

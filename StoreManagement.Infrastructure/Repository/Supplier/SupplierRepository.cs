@@ -19,7 +19,7 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
                 .Select(i => new SupplierDto
                 {
                     Id = i.Id,
-                    Identification = i.Identification,
+                    DocumentNumber = i.DocumentNumber,
                     Name = i.Name,
                 }).ToListAsync(cancellationToken);
         }
@@ -60,7 +60,7 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
             var supplier = new SupplierEntity
             {
                 CompanyId = companyId,
-                Identification = addSupplier.Identification,
+                DocumentNumber = addSupplier.DocumentNumber,
                 Name = addSupplier.Name
             };
 
@@ -70,11 +70,11 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
             return Result.Success();
         }
 
-        public async Task<bool> ValidateSupplierExistsByIdentificationAsync(int companyId, string identification, CancellationToken cancellationToken)
+        public async Task<bool> ValidateSupplierExistsByDocumentNumberAsync(int companyId, string documentNumber, CancellationToken cancellationToken)
         {
             return await dbContext.Supplier
                 .AsNoTracking()
-                .Where(i => i.CompanyId == companyId && i.Identification == identification)
+                .Where(i => i.CompanyId == companyId && i.DocumentNumber == documentNumber)
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
     }

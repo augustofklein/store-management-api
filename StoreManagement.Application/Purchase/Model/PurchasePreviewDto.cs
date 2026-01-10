@@ -16,12 +16,12 @@
 
         public class StorePreviewDto
         {
-            public string Identification { get; set; } = string.Empty;
+            public string DocumentNumber { get; set; } = string.Empty;
         }
 
         public class SupplierPreviewDto
         {
-            public string Identification { get; set; } = string.Empty;
+            public string DocumentNumber { get; set; } = string.Empty;
         }
 
         public class ProductPreviewDto

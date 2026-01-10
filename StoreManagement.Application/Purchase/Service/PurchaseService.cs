@@ -8,8 +8,8 @@ namespace StoreManagement.Application.Purchase.Service
     {
         public async Task<Result> ValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
         {
-            if(!await supplierRepository.ValidateSupplierExistsByIdentificationAsync(companyId, purchaseMapper.Supplier.Identification, cancellationToken))
-                return Result.Failure($"Supplier with identification {purchaseMapper.Supplier.Identification} does not exist.");
+            if(!await supplierRepository.ValidateSupplierExistsByDocumentNumberAsync(companyId, purchaseMapper.Supplier.DocumentNumber, cancellationToken))
+                return Result.Failure($"Supplier with document number {purchaseMapper.Supplier.DocumentNumber} does not exist.");
 
             var productValidation = await productRepository
                 .ValidateProductsByBarcodesAsync(

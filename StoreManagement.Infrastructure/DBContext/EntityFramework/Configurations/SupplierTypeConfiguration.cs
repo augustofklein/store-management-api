@@ -19,8 +19,8 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
-            builder.Property(s => s.Identification)
-                .HasColumnName("identification")
+            builder.Property(s => s.DocumentNumber)
+                .HasColumnName("document_number")
                 .HasColumnType("varchar(14)")
                 .IsRequired();
 

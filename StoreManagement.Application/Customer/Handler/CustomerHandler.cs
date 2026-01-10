@@ -14,14 +14,14 @@ namespace StoreManagement.Application.Customer.Handler
     {
         public async Task<Result> Handle(AddCustomerCommand command, CancellationToken cancellationToken)
         {
-            var validation = await customerService.ValidateCustomerNotExistsAsync(command.CompanyId, command.Identification, cancellationToken);
+            var validation = await customerService.ValidateCustomerNotExistsAsync(command.CompanyId, command.DocumentNumber, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
             var customer = new CustomerDto
             {
                 Id = 0,
-                Identification = command.Identification,
+                DocumentNumber = command.DocumentNumber,
                 Name = command.Name,
                 Address = command.Address,
                 CustomerContacts = [.. command.CustomerContacts.Select(c => new CustomerContactDto
@@ -45,7 +45,7 @@ namespace StoreManagement.Application.Customer.Handler
             var customer = new CustomerDto
             {
                 Id = command.Id,
-                Identification = string.Empty,
+                DocumentNumber = string.Empty,
                 Name = command.Name,
                 Address = command.Address,
                 CustomerContacts = [.. command.CustomerContacts.Select(c => new CustomerContactDto

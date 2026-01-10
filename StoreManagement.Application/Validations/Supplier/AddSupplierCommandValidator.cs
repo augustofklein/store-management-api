@@ -7,11 +7,11 @@ namespace StoreManagement.Application.Validations.Supplier
     {
         public AddSupplierCommandValidator()
         {
-            RuleFor(x => x.Identification)
+            RuleFor(x => x.DocumentNumber)
                 .NotEmpty()
-                .WithMessage("Identification is required.")
+                .WithMessage("Document number is required.")
                 .MaximumLength(14)
-                .WithMessage("Identification must not exceed 14 characters.");
+                .WithMessage("Document number must not exceed 14 characters.");
 
             RuleFor(x => x.Name)
                 .NotEmpty()

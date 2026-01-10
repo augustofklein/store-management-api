@@ -25,7 +25,7 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                     Supplier = new PurchaseDto.SupplierPurchase
                     {
                         Id = i.Supplier.Id,
-                        Identification = i.Supplier.Identification,
+                        DocumentNumber = i.Supplier.DocumentNumber,
                         Name = i.Supplier.Name,
                     },
                     Items = i.PurchaseItems.Select(ii => new PurchaseDto.PurchaseItem

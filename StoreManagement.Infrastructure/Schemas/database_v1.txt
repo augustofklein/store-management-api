@@ -47,7 +47,7 @@ CREATE TABLE customers (
     company_id INTEGER NOT NULL,
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    identification VARCHAR(11) NOT NULL,
+    document_number VARCHAR(11) NOT NULL,
     address VARCHAR(100) NOT NULL,
 
     CONSTRAINT fk_customers_company
@@ -123,7 +123,7 @@ CREATE TABLE suppliers (
     company_id INTEGER NOT NULL,
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    identification VARCHAR(14) NOT NULL,
+    document_number VARCHAR(14) NOT NULL,
 
     CONSTRAINT fk_suppliers_company
         FOREIGN KEY (company_id)

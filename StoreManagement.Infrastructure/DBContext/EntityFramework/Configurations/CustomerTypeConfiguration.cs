@@ -21,8 +21,8 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("company_id")
                 .HasColumnType("integer");
 
-            builder.Property(c => c.Identification)
-                .HasColumnName("identification")
+            builder.Property(c => c.DocumentNumber)
+                .HasColumnName("document_number")
                 .HasColumnType("varchar(11)");
             
             builder.Property(c => c.Name)

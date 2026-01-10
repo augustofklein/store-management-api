@@ -7,11 +7,11 @@ namespace StoreManagement.Application.Validations.Customer
     {
         public AddCustomerCommandValidator()
         {
-            RuleFor(c => c.Identification)
+            RuleFor(c => c.DocumentNumber)
                 .NotEmpty()
-                .WithMessage("Identification is required.")
+                .WithMessage("Document number is required.")
                 .MaximumLength(11)
-                .WithMessage("Identification must not exceed 11 characters.");
+                .WithMessage("Document number must not exceed 11 characters.");
 
             RuleFor(c => c.Name)
                 .NotEmpty()

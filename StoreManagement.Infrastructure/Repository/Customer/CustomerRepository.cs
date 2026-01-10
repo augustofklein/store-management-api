@@ -9,10 +9,10 @@ namespace StoreManagement.Infrastructure.Repository.Customer
 {
     public class CustomerRepository(AppDbContext dbContext) : ICustomerRepository
     {
-        public async Task<bool> VerifyCustomerByIdentificationExistAsync(int companyId, string identification, CancellationToken cancellationToken)
+        public async Task<bool> VerifyCustomerByDocumentNumberExistAsync(int companyId, string documentNumber, CancellationToken cancellationToken)
         {
             return await dbContext.Customers
-                .Where(c => c.CompanyId == companyId && c.Identification == identification)
+                .Where(c => c.CompanyId == companyId && c.DocumentNumber == documentNumber)
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
 
@@ -35,7 +35,7 @@ namespace StoreManagement.Infrastructure.Repository.Customer
                 .Select(c => new CustomerDto
                 {
                     Id = c.Id,
-                    Identification = c.Identification,
+                    DocumentNumber = c.DocumentNumber,
                     Name = c.Name,
                     Address = c.Address,
                     CustomerContacts = c.CustomerContacts.Select(ct => new CustomerContactDto
@@ -55,7 +55,7 @@ namespace StoreManagement.Infrastructure.Repository.Customer
             var customerEntity = new CustomerEntity
             {
                 CompanyId = companyId,
-                Identification = customer.Identification,
+                DocumentNumber = customer.DocumentNumber,
                 Name = customer.Name,
                 Address = customer.Address,
 

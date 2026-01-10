@@ -5,9 +5,9 @@ namespace StoreManagement.Application.Customer.Service
 {
     public class CustomerService(ICustomerRepository custumerRepository) : ICustomerService
     {
-        public async Task<Result> ValidateCustomerNotExistsAsync(int companyId, string identification, CancellationToken cancellationToken)
+        public async Task<Result> ValidateCustomerNotExistsAsync(int companyId, string documentNumber, CancellationToken cancellationToken)
         {
-            if (await custumerRepository.VerifyCustomerByIdentificationExistAsync(companyId, identification, cancellationToken))
+            if (await custumerRepository.VerifyCustomerByDocumentNumberExistAsync(companyId, documentNumber, cancellationToken))
                 return Result.Failure("Customer already exists!");
 
             return Result.Success();

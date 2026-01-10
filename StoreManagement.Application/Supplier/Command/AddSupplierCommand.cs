@@ -3,10 +3,10 @@ using MediatR;
 
 namespace StoreManagement.Application.Supplier.Command
 {
-    public class AddSupplierCommand(string identification, string name) : IRequest<Result>
+    public class AddSupplierCommand(string documentNumber, string name) : IRequest<Result>
     {
         public int CompanyId { get; set; }
-        public string Identification { get; set; } = identification;
+        public string DocumentNumber { get; set; } = documentNumber;
         public string Name { get; set; } = name;
     }
 }
