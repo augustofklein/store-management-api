@@ -1,5 +1,4 @@
 using CSharpFunctionalExtensions;
-using StoreManagement.Application.Invoice.Model;
 using StoreManagement.Application.Product.Model;
 using StoreManagement.Domain.Enums;
 
@@ -14,6 +13,7 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<bool> VerifyProductByIdExistAsync(int companyId, int id, CancellationToken cancellationToken);
         Task<bool> VerifyProductBySkuIdExistAsync(int companyId, string skuId, CancellationToken cancellationToken);
         Task<Result> VerifyArrayProductsExistAsync(int companyId, IEnumerable<int> productIds, CancellationToken cancellationToken);
+        Task<Result> ValidateProductsByBarcodesAsync(int companyId, IEnumerable<string> barcodeProducts, CancellationToken cancellationToken);
         Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTime movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken);
         Task UpdateProductStockArrayAsync(ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken);
     }

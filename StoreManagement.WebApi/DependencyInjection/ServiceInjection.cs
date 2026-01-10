@@ -3,6 +3,7 @@ using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Customer.Service;
 using StoreManagement.Application.Invoice.Service;
 using StoreManagement.Application.Product.Service;
+using StoreManagement.Application.Purchase.Service;
 using StoreManagement.Application.Supplier.Service;
 using StoreManagement.Infrastructure.DBContext;
 
@@ -18,6 +19,7 @@ namespace StoreManagement.WebApi.DependencyInjection
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<IPurchaseService, PurchaseService>();
 
             services.AddScoped<IEFTransactionManager, EfTransactionManager>();
 

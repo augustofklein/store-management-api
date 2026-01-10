@@ -7,7 +7,7 @@ namespace StoreManagement.Application.Supplier.Service
     {
         public async Task<Result> ValidadeDeleteSupplierAsync(int companyId, int supplierId, CancellationToken cancellationToken)
         {
-            if(!await supplierRepository.ValidateExistSupplierAsync(companyId, supplierId, cancellationToken))
+            if(!await supplierRepository.ValidateSupplierExistsByIdAsync(companyId, supplierId, cancellationToken))
                 return Result.Failure($"Not exists supplier with the specific Id.");
 
             if (await supplierRepository.ValidatePurchaseLinkedAsync(companyId, supplierId, cancellationToken))
@@ -18,7 +18,9 @@ namespace StoreManagement.Application.Supplier.Service
 
         public async Task<Result> ValidateAddSupplierAsync(int companyId, string identification, CancellationToken cancellationToken)
         {
-            // Implement validation logic for adding a supplier if needed
+            if(await supplierRepository.ValidateSupplierExistsByIdentificationAsync(companyId, identification, cancellationToken))
+                return Result.Failure("Supplier with the specific identification already exists.");
+
             return Result.Success();
         }
     }

@@ -27,8 +27,10 @@ namespace StoreManagement.WebApi.Controllers
         }
 
         [HttpPost("preview-xml")]
-        public async Task<IActionResult> PreviewPurchaseXml([FromForm] PreviewPurchaseXmlCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> PreviewPurchaseXml([FromForm] IFormFile file, CancellationToken cancellationToken)
         {
+            var command = new PreviewPurchaseXmlCommand(file, User.GetCompanyId());
+
             var result = await mediator.Send(command, cancellationToken);
 
             if (result.IsFailure)

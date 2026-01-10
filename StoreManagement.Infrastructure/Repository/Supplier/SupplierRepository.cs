@@ -47,7 +47,7 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
             return Result.Success();
         }
 
-        public async Task<bool> ValidateExistSupplierAsync(int companyId, int supplierId, CancellationToken cancellationToken)
+        public async Task<bool> ValidateSupplierExistsByIdAsync(int companyId, int supplierId, CancellationToken cancellationToken)
         {
             return await dbContext.Supplier
                 .AsNoTracking()
@@ -68,6 +68,14 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
+        }
+
+        public async Task<bool> ValidateSupplierExistsByIdentificationAsync(int companyId, string identification, CancellationToken cancellationToken)
+        {
+            return await dbContext.Supplier
+                .AsNoTracking()
+                .Where(i => i.CompanyId == companyId && i.Identification == identification)
+                .FirstOrDefaultAsync(cancellationToken) != null;
         }
     }
 }

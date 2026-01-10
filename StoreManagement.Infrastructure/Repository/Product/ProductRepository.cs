@@ -124,6 +124,22 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
+        public async Task<Result> ValidateProductsByBarcodesAsync(int companyId, IEnumerable<string> barcodeProducts, CancellationToken cancellationToken)
+        {
+            var existingProductIds = await dbContext.Products
+                .AsNoTracking()
+                .Where(p => p.CompanyId == companyId && barcodeProducts.Contains(p.Barcode))
+                .Select(p => p.Barcode)
+                .ToListAsync(cancellationToken);
+
+            var missingProductIds = barcodeProducts.Except(existingProductIds).ToList();
+
+            if (missingProductIds.Count != 0)
+                return Result.Failure($"The following barcode products do not exist: {string.Join(", ", missingProductIds)}");
+
+            return Result.Success();
+        }
+
         public async Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTime movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken)
         {
             var productMovements = items.Select(ii => new ProductMovementEntity
