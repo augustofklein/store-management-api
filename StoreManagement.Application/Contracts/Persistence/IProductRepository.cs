@@ -16,5 +16,7 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<Result> ValidateProductsByBarcodesAsync(int companyId, IEnumerable<string> barcodeProducts, CancellationToken cancellationToken);
         Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTime movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken);
         Task UpdateProductStockArrayAsync(ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken);
+        Task<bool> ProductExistsInInvoicesAsync(int companyId, int productId, CancellationToken cancellationToken);
+        Task<bool> ProductExistsInPurchasesAsync(int companyId, int productId, CancellationToken cancellationToken);
     }
 }

@@ -181,5 +181,23 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 }
             }
         }
+
+        public async Task<bool> ProductExistsInInvoicesAsync(int companyId, int productId, CancellationToken cancellationToken)
+        {
+            return await dbContext.Invoice
+                .AsNoTracking()
+                .Where(i => i.CompanyId == companyId)
+                .SelectMany(i => i.InvoiceItems)
+                .AnyAsync(ii => ii.ProductId == productId, cancellationToken);
+        }
+
+        public async Task<bool> ProductExistsInPurchasesAsync(int companyId, int productId, CancellationToken cancellationToken)
+        {
+            return await dbContext.Purchase
+                .AsNoTracking()
+                .Where(i => i.CompanyId == companyId)
+                .SelectMany(i => i.PurchaseItems)
+                .AnyAsync(ii => ii.ProductId == productId, cancellationToken);
+        }
     }
 }

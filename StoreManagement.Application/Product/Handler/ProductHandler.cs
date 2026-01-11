@@ -26,7 +26,7 @@ namespace StoreManagement.Application.Product.Handler
 
         public async Task<Result> Handle(RemoveProductCommand command, CancellationToken cancellationToken)
         {
-            var validation = await productService.ValidateEditDeleteProduct(command.CompanyId, command.Id, cancellationToken);
+            var validation = await productService.ValidateDeleteProductAsync(command.CompanyId, command.Id, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
@@ -39,7 +39,7 @@ namespace StoreManagement.Application.Product.Handler
 
         public async Task<Result> Handle(EditProductCommand command, CancellationToken cancellationToken)
         {
-            var validation = await productService.ValidateEditDeleteProduct(command.CompanyId, command.Id, cancellationToken);
+            var validation = await productService.ValidateEditProductAsync(command.CompanyId, command.Id, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
