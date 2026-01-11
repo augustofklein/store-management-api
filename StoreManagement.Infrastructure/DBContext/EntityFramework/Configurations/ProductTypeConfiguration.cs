@@ -38,7 +38,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(p => p.Description)
                 .HasColumnName("description")
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(100)");
 
             builder.Property(p => p.Stock)
                 .HasColumnName("stock")
