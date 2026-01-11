@@ -10,6 +10,9 @@
 
         public class DocumentPreviewDto
         {
+            public string DocumentNumber { get; set; } = string.Empty;
+            public string DocumentSerie { get; set; } = string.Empty;
+            public string DocumentMod { get; set; } = string.Empty;
             public string DocumentKey { get; set; } = string.Empty;
             public int DocumentStatus { get; set; }
         }

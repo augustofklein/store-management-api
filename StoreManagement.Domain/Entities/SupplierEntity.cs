@@ -4,8 +4,8 @@
     {
         public int CompanyId { get; set; }
         public int Id { get; set; }
-        public string DocumentNumber { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        public string DocumentNumber { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         public virtual ICollection<PurchaseEntity> Purchases { get; set; } = [];
     }

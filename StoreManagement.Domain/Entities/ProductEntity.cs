@@ -6,10 +6,10 @@ namespace StoreManagement.Infrastructure.DBContext.Model
     {
         public int CompanyId { get; set; }
         public int Id { get; set; }
-        public string SkuId { get; set; } = string.Empty;
+        public string SkuId { get; set; } = null!;
         public bool Status { get; set; }
-        public string Barcode { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string Barcode { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public int Stock { get; set; }
 
         public virtual CompanyEntity Company { get; set; } = null!;

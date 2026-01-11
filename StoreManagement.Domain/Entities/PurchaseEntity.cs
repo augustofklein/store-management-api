@@ -7,7 +7,10 @@ namespace StoreManagement.Domain.Entities
         public int CompanyId { get; set; }
         public int SupplierId { get; set; }
         public int Id { get; set; }
-        public string DocumentKey { get; set; } = string.Empty;
+        public string DocumentNumber { get; set; } = null!;
+        public string DocumentSerie { get; set; } = null!;
+        public string DocumentMod { get; set; } = null!;
+        public string DocumentKey { get; set; } = null!;
         public DateTime PurchaseDate { get; set; }
         public decimal TotalAmount { get; set; }
 

@@ -4,8 +4,8 @@ namespace StoreManagement.Infrastructure.DBContext.Model
     {
         public int CompanyId { get; set; }
         public int Id { get; set; }
-        public string Email { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty;
+        public string Email { get; set; } = null!;
+        public string PasswordHash { get; set; } = null!;
 
         public virtual CompanyEntity Company { get; set; } = null!;
     }

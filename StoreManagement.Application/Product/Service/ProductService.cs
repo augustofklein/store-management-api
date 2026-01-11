@@ -1,7 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using StoreManagement.Application.Contracts.Persistence;
-using System.ComponentModel.Design;
-using System.Threading;
 
 namespace StoreManagement.Application.Product.Service
 {

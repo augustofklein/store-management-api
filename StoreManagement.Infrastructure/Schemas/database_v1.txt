@@ -154,7 +154,10 @@ CREATE TABLE purchases (
     company_id INTEGER NOT NULL,
     supplier_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    document_key varchar(44),
+    document_number VARCHAR(20) NOT NULL,
+    document_serie VARCHAR(10) NOT NULL,
+    document_mod CHAR(2),
+    document_key VARCHAR(44),
     purchase_date TIMESTAMP NOT NULL,
     total_amount DECIMAL(12,2),
 
@@ -164,7 +167,13 @@ CREATE TABLE purchases (
 
     CONSTRAINT fk_purchases_supplier
         FOREIGN KEY (supplier_id)
-        REFERENCES suppliers (id)
+        REFERENCES suppliers (id),
+
+    CONSTRAINT uq_purchases_document_key
+        UNIQUE (document_key),
+
+    CONSTRAINT uq_purchases_fiscal_document
+        UNIQUE (company_id, supplier_id, document_mod, document_serie, document_number)
 );
 
 CREATE INDEX idx_purchases_company_id ON purchases (company_id);

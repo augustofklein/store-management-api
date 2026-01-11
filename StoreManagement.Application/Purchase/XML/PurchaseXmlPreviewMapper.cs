@@ -11,6 +11,33 @@ namespace StoreManagement.Application.Purchase.XML
 
             var fiscalDocument = new PurchasePreviewDto.DocumentPreviewDto
             {
+                DocumentNumber = xml
+                    .Root?
+                    .Element(ns + "NFe")?
+                    .Element(ns + "infNFe")?
+                    .Element(ns + "ide")?
+                    .Element(ns + "nNF")?
+                    .Value
+                    ?? string.Empty,
+
+                DocumentSerie = xml
+                    .Root?
+                    .Element(ns + "NFe")?
+                    .Element(ns + "infNFe")?
+                    .Element(ns + "ide")?
+                    .Element(ns + "serie")?
+                    .Value
+                    ?? string.Empty,
+
+                DocumentMod = xml
+                    .Root?
+                    .Element(ns + "NFe")?
+                    .Element(ns + "infNFe")?
+                    .Element(ns + "ide")?
+                    .Element(ns + "mod")?
+                    .Value
+                    ?? string.Empty,
+
                 DocumentKey = xml
                 .Root?
                 .Element(ns + "protNFe")?
