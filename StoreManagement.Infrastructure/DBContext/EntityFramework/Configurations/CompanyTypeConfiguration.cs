@@ -18,7 +18,12 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(c => c.Id)
                 .HasColumnName("id")
-                .HasColumnType("serial");
+                .HasColumnType("integer");
+
+            builder.Property(s => s.DocumentNumber)
+                .HasColumnName("document_number")
+                .HasColumnType("varchar(14)")
+                .IsRequired();
 
             builder.Property(c => c.Name)
                 .HasColumnName("name")

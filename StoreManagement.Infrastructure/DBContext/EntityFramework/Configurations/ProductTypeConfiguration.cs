@@ -22,7 +22,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(p => p.Id)
                 .HasColumnName("id")
-                .HasColumnType("serial");
+                .ValueGeneratedOnAdd();
 
             builder.Property(p => p.SkuId)
                 .HasColumnName("sku_id")

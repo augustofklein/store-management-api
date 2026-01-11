@@ -1,13 +1,20 @@
 CREATE TABLE companies (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    document_number VARCHAR(14) NOT NULL,
     name VARCHAR(50) NOT NULL,
 
-    CONSTRAINT uq_companies_name UNIQUE (name)
+    CONSTRAINT uq_companies_name UNIQUE (document_number),
+
+    CONSTRAINT chk_companies_document_number_format
+        CHECK (
+            document_number ~ '^[0-9]+$'
+            AND char_length(document_number) IN (11, 14)
+        )
 );
 
 CREATE TABLE users (
     company_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(50) NOT NULL,
     password_hash VARCHAR(200) NOT NULL,
 
@@ -19,7 +26,7 @@ CREATE TABLE users (
 
 CREATE TABLE products (
     company_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     sku_id VARCHAR(20) NOT NULL,
     status BOOLEAN NOT NULL,
     barcode VARCHAR(13) NOT NULL,
@@ -34,7 +41,7 @@ CREATE TABLE products (
 
 CREATE TABLE product_price (
     product_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     price DECIMAL(10, 2) NOT NULL,
 
     CONSTRAINT fk_product_price_product
@@ -45,7 +52,7 @@ CREATE TABLE product_price (
 
 CREATE TABLE customers (
     company_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     document_number VARCHAR(11) NOT NULL,
     address VARCHAR(100) NOT NULL,
@@ -53,18 +60,24 @@ CREATE TABLE customers (
     CONSTRAINT fk_customers_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_customers_document_number_format
+        CHECK (
+            document_number ~ '^[0-9]+$'
+            AND char_length(document_number) IN (11, 14)
+        )
 );
 
 CREATE TABLE contact_type (
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     description VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE customer_contact (
     customer_id INTEGER NOT NULL,
     contact_type_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     contact VARCHAR(50) NOT NULL,
 
     CONSTRAINT fk_customer_contact_customer
@@ -81,7 +94,7 @@ CREATE TABLE customer_contact (
 CREATE TABLE invoices (
     company_id INTEGER NOT NULL,
     customer_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     invoice_date TIMESTAMP NOT NULL,
     total_amount DECIMAL(12,2),
 
@@ -100,7 +113,7 @@ CREATE INDEX idx_invoices_customer_id ON invoices (customer_id);
 CREATE TABLE invoice_items (
     invoice_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     price DECIMAL(10,2) NOT NULL,
     quantity INTEGER NOT NULL,
 
@@ -121,20 +134,26 @@ CREATE INDEX idx_invoice_items_product_id ON invoice_items (product_id);
 
 CREATE TABLE suppliers (
     company_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     document_number VARCHAR(14) NOT NULL,
 
     CONSTRAINT fk_suppliers_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_supplier_document_number_format
+        CHECK (
+            document_number ~ '^[0-9]+$'
+            AND char_length(document_number) IN (11, 14)
+        )
 );
 
 CREATE TABLE purchases (
     company_id INTEGER NOT NULL,
     supplier_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     document_key varchar(44),
     purchase_date TIMESTAMP NOT NULL,
     total_amount DECIMAL(12,2),
@@ -154,7 +173,7 @@ CREATE INDEX idx_purchases_supplier_id ON purchases (supplier_id);
 CREATE TABLE purchase_items (
     purchase_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     price DECIMAL(10,2) NOT NULL,
     quantity INTEGER NOT NULL,
     package INTEGER NOT NULL,
@@ -176,7 +195,7 @@ CREATE INDEX idx_purchase_items_product_id ON purchase_items (product_id);
 
 CREATE TABLE product_movements (
     product_id INTEGER NOT NULL,
-    id SERIAL PRIMARY KEY,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     movement_type SMALLINT NOT NULL,
     quantity INTEGER NOT NULL,
     price DECIMAL(10, 2) NOT NULL,

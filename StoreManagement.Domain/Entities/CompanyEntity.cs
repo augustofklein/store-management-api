@@ -5,6 +5,7 @@ namespace StoreManagement.Infrastructure.DBContext.Model
     public class CompanyEntity
     {
         public int Id { get; set; }
+        public string DocumentNumber { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
 
         public required ICollection<UserEntity> Users { get; set; }

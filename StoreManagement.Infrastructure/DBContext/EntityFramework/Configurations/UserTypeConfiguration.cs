@@ -22,7 +22,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(u => u.Id)
                 .HasColumnName("id")
-                .HasColumnType("serial");
+                .ValueGeneratedOnAdd();
 
             builder.Property(u => u.Email)
                 .HasColumnName("email")
