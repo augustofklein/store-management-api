@@ -1,12 +1,15 @@
+using StoreManagement.Domain.Entities;
+
 namespace StoreManagement.Infrastructure.DBContext.Model
 {
     public class UserEntity
     {
-        public int CompanyId { get; set; }
         public int Id { get; set; }
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public virtual CompanyEntity Company { get; set; } = null!;
+        public ICollection<UserCompanyEntity> UserCompanies { get; set; } = [];
     }
 }

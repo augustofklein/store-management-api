@@ -12,16 +12,44 @@ CREATE TABLE companies (
         )
 );
 
-CREATE TABLE users (
-    company_id INTEGER NOT NULL,
+CREATE TABLE user_roles (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    email VARCHAR(50) NOT NULL,
-    password_hash VARCHAR(200) NOT NULL,
+    name VARCHAR(50) NOT NULL,
 
-    CONSTRAINT fk_users_company
+    CONSTRAINT uq_user_roles_name UNIQUE (name)
+);
+
+CREATE TABLE users (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(200) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+
+    CONSTRAINT uq_user_email UNIQUE (email)
+);
+
+CREATE TABLE user_companies (
+    company_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    role_id INTEGER NOT NULL,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+
+    CONSTRAINT fk_user_companies_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_user_companies_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_user_companies_role
+        FOREIGN KEY (role_id)
+        REFERENCES user_roles(id)
 );
 
 CREATE TABLE products (

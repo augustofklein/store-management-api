@@ -7,8 +7,10 @@ namespace StoreManagement.Infrastructure.DBContext
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public required DbSet<CompanyEntity> Companies { get; set; }
+        public required DbSet<UserRoleEntity> UserRoles { get; set; }
         public required DbSet<UserEntity> Users { get; set; }
+        public required DbSet<UserCompanyEntity> UserCompanies { get; set; }
+        public required DbSet<CompanyEntity> Companies { get; set; }
         public required DbSet<ProductEntity> Products { get; set; }
         public required DbSet<ProductPriceEntity> ProductPrice { get; set; }
         public required DbSet<CustomerEntity> Customers { get; set; }
@@ -23,8 +25,10 @@ namespace StoreManagement.Infrastructure.DBContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CompanyTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserCompanyTyperConfiguration());
+            modelBuilder.ApplyConfiguration(new CompanyTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ProductPriceTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerTypeConfiguration());

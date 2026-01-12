@@ -12,10 +12,25 @@ namespace StoreManagement.Application.Auth.Service
         public async Task<Result> ValidateLogin(string email, string password, int companyId, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(e => e.CompanyId == companyId && e.Email == email, cancellationToken);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == email && u.IsActive, cancellationToken);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            if (user == null)
                 return Result.Failure("Invalid email or password.");
+
+            if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                return Result.Failure("Invalid email or password.");
+
+            var hasAccessToCompany = await _dbContext.UserCompanies
+                .AsNoTracking()
+                .AnyAsync(uc =>
+                    uc.UserId == user.Id &&
+                    uc.CompanyId == companyId &&
+                    uc.IsActive,
+                    cancellationToken);
+
+            if (!hasAccessToCompany)
+                return Result.Failure("User does not have access to this company.");
 
             return Result.Success();
         }

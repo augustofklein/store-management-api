@@ -16,26 +16,21 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
-            builder.Property(u => u.CompanyId)
-                .HasColumnName("company_id")
-                .HasColumnType("int");
-
-            builder.Property(u => u.Id)
-                .HasColumnName("id")
-                .ValueGeneratedOnAdd();
-
             builder.Property(u => u.Email)
                 .HasColumnName("email")
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(255)");
 
             builder.Property(u => u.PasswordHash)
                 .HasColumnName("password_hash")
                 .HasColumnType("varchar(200)");
 
-            builder.HasOne(u => u.Company)
-               .WithMany(u => u.Users)
-               .HasForeignKey(u => u.CompanyId)
-               .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(u => u.IsActive)
+                .HasColumnName("is_active")
+                .HasColumnType("boolean");
+
+            builder.Property(u => u.CreatedAt)
+                .HasColumnName("created_at")
+                .HasColumnType("timestamp");
         }
     }
 }

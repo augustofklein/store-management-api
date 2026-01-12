@@ -8,7 +8,7 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public string DocumentNumber { get; set; } = null!;
         public string Name { get; set; } = null!;
 
-        public required ICollection<UserEntity> Users { get; set; }
+        public required ICollection<UserCompanyEntity> UserCompanies { get; set; }
         public required ICollection<ProductEntity> Products { get; set; }
         public required ICollection<CustomerEntity> Customers { get; set; }
         public required ICollection<InvoiceEntity> Invoices { get; set; }
