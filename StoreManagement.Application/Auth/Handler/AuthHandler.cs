@@ -11,7 +11,7 @@ namespace StoreManagement.Application.Auth.Handler
     {
         public async Task<Result<UserToken>> Handle(AuthCommand command, CancellationToken cancellationToken)
         {
-            var validation = await authService.ValidateLogin(command.Username, command.Password, command.CompanyId, cancellationToken);
+            var validation = await authService.AuthenticateUserForCompanyAsync(command.Username, command.Password, command.CompanyId, cancellationToken);
 
             return validation.IsFailure
                 ? Result.Failure<UserToken>(validation.Error)

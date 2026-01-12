@@ -6,6 +6,7 @@ using StoreManagement.Application.Product.Service;
 using StoreManagement.Application.Purchase.Service;
 using StoreManagement.Application.Supplier.Service;
 using StoreManagement.Infrastructure.DBContext;
+using StoreManagement.Infrastructure.Repository.Auth;
 
 namespace StoreManagement.WebApi.DependencyInjection
 {
