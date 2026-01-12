@@ -11,6 +11,7 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public string Barcode { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int Stock { get; set; }
+        public decimal AverageCost { get; set; }
 
         public virtual CompanyEntity Company { get; set; } = null!;
         public ProductPriceEntity ProductPrice { get; set; } = null!;

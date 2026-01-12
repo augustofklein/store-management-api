@@ -44,6 +44,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("stock")
                 .HasColumnType("integer");
 
+            builder.Property(pp => pp.AverageCost)
+                .HasColumnName("average_cost")
+                .HasColumnType("decimal(10,2)")
+                .IsRequired();
+
             builder.HasOne(p => p.Company)
                .WithMany(p => p.Products)
                .HasForeignKey(p => p.CompanyId)
