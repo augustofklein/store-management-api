@@ -34,7 +34,14 @@ namespace StoreManagement.Application.Purchase.Service
                     item.Id = product.Id;
                     item.SkuId = product.SkuId;
                 }
+                else
+                {
+                    item.ValidationMessage = "Product not found for the given barcode.";
+                }
             }
+
+            if (purchaseMapper.Products.Any(p => !p.ProductFound))
+                return Result.Failure("Some products could not be resolved.");
 
             return Result.Success();
         }

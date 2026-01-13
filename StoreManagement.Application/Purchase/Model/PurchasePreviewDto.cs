@@ -29,7 +29,7 @@
 
         public class ProductPreviewDto
         {
-            public int Id { get; set; }
+            public int? Id { get; set; }
             public string SkuId { get; set; } = string.Empty;
             public string Barcode { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
@@ -37,6 +37,8 @@
             public decimal Quantity { get; set; }
             public decimal Price { get; set; }
             public decimal Total => Quantity * Price;
+            public bool ProductFound => Id.HasValue;
+            public string? ValidationMessage { get; set; }
         }
     }
 }
