@@ -6,7 +6,7 @@ namespace StoreManagement.Application.Purchase.Service
 {
     public class PurchaseService(ICompanyRepository companyRepository, IProductRepository productRepository, ISupplierRepository supplierRepository) : IPurchaseService
     {
-        public async Task<Result> ValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
+        public async Task<Result> EnrichAndValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
         {
             if(!await companyRepository.ExistsCompanyByDocumentNumberAsync(companyId, purchaseMapper.Store.DocumentNumber, cancellationToken))
                 return Result.Failure($"Store with document number {purchaseMapper.Store.DocumentNumber} does not exist.");

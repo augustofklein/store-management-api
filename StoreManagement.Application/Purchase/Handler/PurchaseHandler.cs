@@ -24,7 +24,7 @@ namespace StoreManagement.Application.Purchase.Handler
             if (!preview.Products.Any())
                 return Result.Failure<PurchasePreviewDto>("No products found in XML.");
 
-            var validation = await purchaseService.ValidatePurchasePreviewAsync(command.CompanyId, preview, cancellationToken);
+            var validation = await purchaseService.EnrichAndValidatePurchasePreviewAsync(command.CompanyId, preview, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure<PurchasePreviewDto>(validation.Error);
 
