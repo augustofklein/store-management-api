@@ -1,4 +1,5 @@
 ﻿using StoreManagement.Application.Purchase.Model;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace StoreManagement.Application.Purchase.XML
@@ -11,7 +12,7 @@ namespace StoreManagement.Application.Purchase.XML
 
             var fiscalDocument = new PurchasePreviewDto.DocumentPreviewDto
             {
-                DocumentNumber = xml
+                Number = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -20,7 +21,7 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty,
 
-                DocumentSerie = xml
+                Serie = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -29,7 +30,7 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty,
 
-                DocumentMod = xml
+                Mod = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -38,7 +39,7 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty,
 
-                DocumentKey = xml
+                Key = xml
                 .Root?
                 .Element(ns + "protNFe")?
                 .Element(ns + "infProt")?
@@ -46,7 +47,7 @@ namespace StoreManagement.Application.Purchase.XML
                 .Value
                 ?? string.Empty,
 
-                DocumentStatus = int.TryParse(xml
+                Status = int.TryParse(xml
                     .Root?
                     .Element(ns + "protNFe")?
                     .Element(ns + "infProt")?
@@ -89,6 +90,10 @@ namespace StoreManagement.Application.Purchase.XML
                 {
                     Barcode = prod!.Element(ns + "cEAN")?.Value ?? string.Empty,
                     Description = prod.Element(ns + "xProd")?.Value ?? string.Empty,
+                    Package = int.TryParse(prod.Element(ns + "qTrib")?.Value,
+                        NumberStyles.Any,
+                        CultureInfo.InvariantCulture,
+                        out var pkg) ? pkg : 0,
                     Quantity = decimal.TryParse(prod.Element(ns + "qCom")?.Value, out var qty) ? qty : 0,
                     Price = decimal.TryParse(prod.Element(ns + "vUnCom")?.Value, out var price) ? price : 0
                 })

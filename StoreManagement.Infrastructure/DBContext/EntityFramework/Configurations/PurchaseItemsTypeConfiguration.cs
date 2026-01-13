@@ -29,13 +29,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnType("decimal(10,2)")
                 .IsRequired();
 
-            builder.Property(i => i.Quantity)
-                .HasColumnName("quantity")
+            builder.Property(i => i.Package)
+                .HasColumnName("package")
                 .HasColumnType("integer")
                 .IsRequired();
 
-            builder.Property(i => i.Package)
-                .HasColumnName("package")
+            builder.Property(i => i.Quantity)
+                .HasColumnName("quantity")
                 .HasColumnType("integer")
                 .IsRequired();
 

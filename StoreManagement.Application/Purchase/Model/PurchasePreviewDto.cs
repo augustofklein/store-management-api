@@ -10,11 +10,11 @@
 
         public class DocumentPreviewDto
         {
-            public string DocumentNumber { get; set; } = string.Empty;
-            public string DocumentSerie { get; set; } = string.Empty;
-            public string DocumentMod { get; set; } = string.Empty;
-            public string DocumentKey { get; set; } = string.Empty;
-            public int DocumentStatus { get; set; }
+            public string Number { get; set; } = string.Empty;
+            public string Serie { get; set; } = string.Empty;
+            public string Mod { get; set; } = string.Empty;
+            public string Key { get; set; } = string.Empty;
+            public int Status { get; set; }
         }
 
         public class StorePreviewDto
@@ -29,8 +29,11 @@
 
         public class ProductPreviewDto
         {
+            public int Id { get; set; }
+            public string SkuId { get; set; } = string.Empty;
             public string Barcode { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
+            public int Package { get; set; }
             public decimal Quantity { get; set; }
             public decimal Price { get; set; }
             public decimal Total => Quantity * Price;

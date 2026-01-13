@@ -23,6 +23,19 @@ namespace StoreManagement.Application.Purchase.Service
             if (productValidation.IsFailure)
                 return Result.Failure(productValidation.Error);
 
+            var products = await productRepository.ReturnProductsByBarcodeAsync(companyId, [.. purchaseMapper.Products.Select(p => p.Barcode)], cancellationToken);
+
+            var productMap = products.ToDictionary(p => p.Barcode, p => new { p.Id, p.SkuId });
+
+            foreach (var item in purchaseMapper.Products)
+            {
+                if (productMap.TryGetValue(item.Barcode, out var product))
+                {
+                    item.Id = product.Id;
+                    item.SkuId = product.SkuId;
+                }
+            }
+
             return Result.Success();
         }
     }

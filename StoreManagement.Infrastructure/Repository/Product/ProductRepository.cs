@@ -199,5 +199,23 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 .SelectMany(i => i.PurchaseItems)
                 .AnyAsync(ii => ii.ProductId == productId, cancellationToken);
         }
+
+        public async Task<IEnumerable<ProductDto>> ReturnProductsByBarcodeAsync(int companyId, List<string> barcodes, CancellationToken cancellationToken)
+        {
+            return await dbContext.Products
+                .AsNoTracking()
+                .Where(p => p.CompanyId == companyId && barcodes.Contains(p.Barcode))
+                .Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    SkuId = p.SkuId,
+                    Status = p.Status,
+                    Barcode = p.Barcode,
+                    Description = p.Description,
+                    Stock = p.Stock,
+                    Price = p.ProductPrice.Price
+                })
+                .ToListAsync(cancellationToken);
+        }
     }
 }

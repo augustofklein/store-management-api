@@ -213,8 +213,8 @@ CREATE TABLE purchase_items (
     product_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     price DECIMAL(10,2) NOT NULL,
-    quantity INTEGER NOT NULL,
     package INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
 
     CONSTRAINT fk_purchase_items_purchase
         FOREIGN KEY (purchase_id)
