@@ -16,10 +16,10 @@
 
         public class PurchaseProduct
         {
-            public string Barcode { get; set; } = string.Empty;
+            public int Id { get; set; }
+            public decimal Price { get; set; }
             public int Package { get; set; }
             public decimal Quantity { get; set; }
-            public decimal Price { get; set; }
         }
     }
 }

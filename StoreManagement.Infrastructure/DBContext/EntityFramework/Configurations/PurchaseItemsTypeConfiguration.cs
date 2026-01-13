@@ -39,6 +39,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnType("integer")
                 .IsRequired();
 
+            builder.Property(i => i.ShippingCost)
+                .HasColumnName("shipping_cost")
+                .HasColumnType("decimal(10,2)")
+                .IsRequired();
+
             builder.HasOne(c => c.Purchase)
                .WithMany(c => c.PurchaseItems)
                .HasForeignKey(c => c.PurchaseId)

@@ -215,6 +215,7 @@ CREATE TABLE purchase_items (
     price DECIMAL(10,2) NOT NULL,
     package INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
+    shipping_cost DECIMAL(10,2) NOT NULL,
 
     CONSTRAINT fk_purchase_items_purchase
         FOREIGN KEY (purchase_id)

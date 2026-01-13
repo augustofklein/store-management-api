@@ -90,12 +90,13 @@ namespace StoreManagement.Application.Purchase.XML
                 {
                     Barcode = prod!.Element(ns + "cEAN")?.Value ?? string.Empty,
                     Description = prod.Element(ns + "xProd")?.Value ?? string.Empty,
+                    Price = decimal.TryParse(prod.Element(ns + "vUnCom")?.Value, out var price) ? price : 0,
                     Package = int.TryParse(prod.Element(ns + "qTrib")?.Value,
                         NumberStyles.Any,
                         CultureInfo.InvariantCulture,
                         out var pkg) ? pkg : 0,
                     Quantity = decimal.TryParse(prod.Element(ns + "qCom")?.Value, out var qty) ? qty : 0,
-                    Price = decimal.TryParse(prod.Element(ns + "vUnCom")?.Value, out var price) ? price : 0
+                    ShippingCost = decimal.TryParse(prod.Element(ns + "vFrete")?.Value, out var shippingCost) ? shippingCost : 0
                 })
                 .ToList() ?? [];
 
