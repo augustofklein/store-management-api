@@ -188,6 +188,7 @@ CREATE TABLE purchases (
     document_mod CHAR(2),
     document_key VARCHAR(44),
     purchase_date TIMESTAMP NOT NULL,
+    purchase_entry_date TIMESTAMP NOT NULL,
     total_amount DECIMAL(12,2),
 
     CONSTRAINT fk_purchases_company

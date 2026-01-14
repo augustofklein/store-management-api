@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using StoreManagement.Application.Contracts.Persistence;
+using StoreManagement.Application.Purchase.Command;
 using StoreManagement.Application.Purchase.Model;
 
 namespace StoreManagement.Application.Purchase.Service
@@ -8,11 +9,13 @@ namespace StoreManagement.Application.Purchase.Service
     {
         public async Task<Result> EnrichAndValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
         {
-            if(!await companyRepository.ExistsCompanyByDocumentNumberAsync(companyId, purchaseMapper.Store.DocumentNumber, cancellationToken))
-                return Result.Failure($"Store with document number {purchaseMapper.Store.DocumentNumber} does not exist.");
+            if(!await companyRepository.ExistsCompanyByDocumentNumberAsync(companyId, purchaseMapper.StoreDocumentNumber, cancellationToken))
+                return Result.Failure($"Store with document number {purchaseMapper.StoreDocumentNumber} does not exist.");
 
-            if (!await supplierRepository.ValidateSupplierExistsByDocumentNumberAsync(companyId, purchaseMapper.Supplier.DocumentNumber, cancellationToken))
-                return Result.Failure($"Supplier with document number {purchaseMapper.Supplier.DocumentNumber} does not exist.");
+            if (!await supplierRepository.ValidateSupplierExistsByDocumentNumberAsync(companyId, purchaseMapper.SupplierInformation.DocumentNumber, cancellationToken))
+                return Result.Failure($"Supplier with document number {purchaseMapper.SupplierInformation.DocumentNumber} does not exist.");
+
+            purchaseMapper.SupplierInformation.SupplierId = await supplierRepository.ReturnSupplierIdByDocumentNumber(companyId, purchaseMapper.SupplierInformation.DocumentNumber, cancellationToken);
 
             var productValidation = await productRepository
                 .ValidateProductsByBarcodesAsync(
@@ -42,6 +45,21 @@ namespace StoreManagement.Application.Purchase.Service
 
             if (purchaseMapper.Products.Any(p => !p.ProductFound))
                 return Result.Failure("Some products could not be resolved.");
+
+            return Result.Success();
+        }
+
+        public async Task<Result> ValidateAddPurchaseAsync(AddPurchaseCommand command, CancellationToken cancellationToken)
+        {
+            if(command.PurchaseEntryDate > DateTimeOffset.Now.DateTime)
+                return Result.Failure("Purchase entry date cannot be in the future.");
+
+            if(!await supplierRepository.ValidateSupplierExistsByIdAsync(command.CompanyId, command.SupplierId, cancellationToken))
+                return Result.Failure($"Supplier with ID {command.SupplierId} does not exist.");
+
+            var productValidation = await productRepository.VerifyArrayProductsExistAsync(command.CompanyId, command.Products.Select(x => x.Id), cancellationToken);
+            if(productValidation.IsFailure)
+                return Result.Failure(productValidation.Error);
 
             return Result.Success();
         }

@@ -77,5 +77,14 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
                 .Where(i => i.CompanyId == companyId && i.DocumentNumber == documentNumber)
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
+
+        public async Task<int> ReturnSupplierIdByDocumentNumber(int companyId, string documentNumber, CancellationToken cancellationToken)
+        {
+            return await dbContext.Supplier
+                .AsNoTracking()
+                .Where(i => i.CompanyId == companyId && i.DocumentNumber == documentNumber)
+                .Select(i => i.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

@@ -6,6 +6,7 @@ using StoreManagement.Domain.Entities;
 using StoreManagement.Domain.Enums;
 using StoreManagement.Infrastructure.DBContext;
 using StoreManagement.Infrastructure.DBContext.Model;
+using System.ComponentModel.Design;
 
 namespace StoreManagement.Infrastructure.Repository.Product
 {
@@ -216,6 +217,42 @@ namespace StoreManagement.Infrastructure.Repository.Product
                     Price = p.ProductPrice.Price
                 })
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Result> UpdateAverageCostAsync(int companyId, int productId, int purchaseQuantity, decimal purchaseUnitPrice, CancellationToken cancellationToken)
+        {
+            var product = await dbContext.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.CompanyId == companyId && p.Id == productId, cancellationToken);
+
+            if (product == null)
+                return Result.Failure($"Product with ID {productId} not found.");
+
+            if (product.Stock == 0)
+            {
+                product.AverageCost = purchaseUnitPrice;
+                product.Stock = purchaseQuantity;
+            }
+            else
+            {
+                var totalCurrentValue =
+                    product.Stock * product.AverageCost;
+
+                var totalPurchaseValue =
+                    purchaseQuantity * purchaseUnitPrice;
+
+                var newStockQuantity =
+                    product.Stock + purchaseQuantity;
+
+                product.AverageCost =
+                    (totalCurrentValue + totalPurchaseValue) / newStockQuantity;
+
+                product.Stock = newStockQuantity;
+            }
+
+            dbContext.Products.Update(product);
+
+            return Result.Success();
         }
     }
 }

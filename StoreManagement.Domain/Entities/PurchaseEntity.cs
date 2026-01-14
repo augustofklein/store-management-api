@@ -12,6 +12,7 @@ namespace StoreManagement.Domain.Entities
         public string DocumentMod { get; set; } = null!;
         public string DocumentKey { get; set; } = null!;
         public DateTime PurchaseDate { get; set; }
+        public DateTime PurchaseEntryDate { get; set; }
         public decimal TotalAmount { get; set; }
 
         public virtual CompanyEntity Company { get; set; } = null!;

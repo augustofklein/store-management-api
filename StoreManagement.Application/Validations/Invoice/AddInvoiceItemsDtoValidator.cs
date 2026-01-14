@@ -8,8 +8,8 @@ namespace StoreManagement.Application.Validations.Invoice
         public AddInvoiceItemsDtoValidator()
         {
             RuleFor(x => x.ProductId)
-                .GreaterThanOrEqualTo(0)
-                .WithMessage("ProductId must be greater than or equal to zero.");
+                .GreaterThan(0)
+                .WithMessage("ProductId must be greater than zero.");
 
             RuleFor(x => x.Price)
                 .GreaterThan(0)

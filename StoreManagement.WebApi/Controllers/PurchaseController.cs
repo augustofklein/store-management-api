@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Purchase.Command;
 using StoreManagement.WebApi.Extensions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace StoreManagement.WebApi.Controllers
 {
@@ -37,6 +36,18 @@ namespace StoreManagement.WebApi.Controllers
                 return BadRequest(result.Error);
 
             return Ok(result.Value);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPurchase([FromBody] AddPurchaseCommand command, CancellationToken cancellationToken)
+        {
+            command.CompanyId = User.GetCompanyId();
+
+            var result = await mediator.Send(command, cancellationToken);
+            if(result.IsFailure)
+                return BadRequest(result.Error);
+
+            return Created();
         }
     }
 }

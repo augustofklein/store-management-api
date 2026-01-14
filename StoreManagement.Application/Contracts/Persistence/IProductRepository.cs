@@ -19,5 +19,6 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<bool> ProductExistsInInvoicesAsync(int companyId, int productId, CancellationToken cancellationToken);
         Task<bool> ProductExistsInPurchasesAsync(int companyId, int productId, CancellationToken cancellationToken);
         Task<IEnumerable<ProductDto>> ReturnProductsByBarcodeAsync(int companyId, List<string> barcodes, CancellationToken cancellationToken);
+        Task<Result> UpdateAverageCostAsync(int companyId, int productId, int purchaseQuantity, decimal purchaseUnitPrice, CancellationToken cancellationToken);
     }
 }

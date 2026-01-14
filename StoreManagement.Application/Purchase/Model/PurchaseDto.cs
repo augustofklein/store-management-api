@@ -15,8 +15,8 @@
             public string Barcode { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
             public decimal Price { get; set; }
-            public int Quantity { get; set; }
             public int Package { get; set; }
+            public int Quantity { get; set; }
         }
 
         public class SupplierPurchase

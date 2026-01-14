@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Purchase.Model;
+using StoreManagement.Domain.Entities;
 using StoreManagement.Infrastructure.DBContext;
 
 namespace StoreManagement.Infrastructure.Repository.Purchase
 {
-    public class PurchaseRepository(AppDbContext dbContext) : IPurchaseRepository
+    public class PurchaseRepository(AppDbContext dbContext, IProductRepository productRepository) : IPurchaseRepository
     {
         public async Task<Result<IEnumerable<PurchaseDto>>> ReturnAllPuchasesAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
@@ -38,6 +39,47 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                         Quantity = ii.Quantity
                     }).ToList()
                 }).ToListAsync(cancellationToken);
+        }
+
+        public async Task<Result> AddPurchaseAsync(int companyId, AddPurchaseDto purchase, CancellationToken cancellationToken)
+        {
+            await dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+            try
+            {
+                var purchaseEntity = new PurchaseEntity
+                {
+                    CompanyId = companyId,
+                    SupplierId = purchase.SupplierId,
+                    PurchaseDate = purchase.Document.DocumentDate,
+                    TotalAmount = purchase.Products.Sum(i => i.Price * i.Quantity),
+                    PurchaseItems = [.. purchase.Products.Select(i => new PurchaseItemEntity
+                    {
+                        ProductId = i.Id,
+                        Price = i.Price,
+                        Quantity = i.Quantity,
+                        Package = i.Package,
+                        ShippingCost = i.ShippingCost
+                    })]
+                };
+
+                await dbContext.Purchase.AddAsync(purchaseEntity, cancellationToken);
+
+                foreach(var item in purchase.Products)
+                {
+                    await productRepository.UpdateAverageCostAsync(companyId, item.Id, item.Quantity, item.Price, cancellationToken);
+                }
+
+                await dbContext.SaveChangesAsync(cancellationToken);
+                await dbContext.Database.CommitTransactionAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await dbContext.Database.RollbackTransactionAsync(cancellationToken);
+                return Result.Failure($"An error occurred while adding the purchase: {ex.Message}");
+            }
+
+            return Result.Success();
         }
     }
 }

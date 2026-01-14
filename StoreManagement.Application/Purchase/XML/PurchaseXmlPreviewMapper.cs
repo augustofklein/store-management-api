@@ -12,7 +12,7 @@ namespace StoreManagement.Application.Purchase.XML
 
             var fiscalDocument = new PurchasePreviewDto.DocumentPreviewDto
             {
-                Number = xml
+                DocumentNumber = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -21,7 +21,7 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty,
 
-                Serie = xml
+                DocumentSerie = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -30,7 +30,7 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty,
 
-                Mod = xml
+                DocumentMod = xml
                     .Root?
                     .Element(ns + "NFe")?
                     .Element(ns + "infNFe")?
@@ -39,7 +39,7 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty,
 
-                Key = xml
+                DocumentKey = xml
                 .Root?
                 .Element(ns + "protNFe")?
                 .Element(ns + "infProt")?
@@ -47,28 +47,30 @@ namespace StoreManagement.Application.Purchase.XML
                 .Value
                 ?? string.Empty,
 
-                Status = int.TryParse(xml
+                DocumentStatus = int.TryParse(xml
                     .Root?
                     .Element(ns + "protNFe")?
                     .Element(ns + "infProt")?
                     .Element(ns + "cStat")?
                     .Value
-                    ?? "0", out var documentStatus) ? documentStatus: 0
+                    ?? "0", out var documentStatus) ? documentStatus: 0,
+
+                DocumentDate = DateTimeOffset.TryParse(
+                    xml.Root?
+                        .Element(ns + "NFe")?
+                        .Element(ns + "infNFe")?
+                        .Element(ns + "ide")?
+                        .Element(ns + "dhEmi")?
+                        .Value,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                    out var parsedDate
+                )
+                ? parsedDate.UtcDateTime
+                : DateTime.UtcNow
             };
 
-            var store = new PurchasePreviewDto.StorePreviewDto
-            {
-                DocumentNumber = xml
-                    .Root?
-                    .Element(ns + "NFe")?
-                    .Element(ns + "infNFe")?
-                    .Element(ns + "dest")?
-                    .Element(ns + "CNPJ")?
-                    .Value
-                    ?? string.Empty
-            };
-
-            var supplier = new PurchasePreviewDto.SupplierPreviewDto
+            var supplierData = new PurchasePreviewDto.SupplierPreviewDto
             {
                 DocumentNumber = xml
                     .Root?
@@ -79,6 +81,15 @@ namespace StoreManagement.Application.Purchase.XML
                     .Value
                     ?? string.Empty
             };
+
+            var storeDocumentNumber = xml
+                    .Root?
+                    .Element(ns + "NFe")?
+                    .Element(ns + "infNFe")?
+                    .Element(ns + "dest")?
+                    .Element(ns + "CNPJ")?
+                    .Value
+                    ?? string.Empty;
 
             var products = xml.Root?
                 .Element(ns + "NFe")?
@@ -95,16 +106,16 @@ namespace StoreManagement.Application.Purchase.XML
                         NumberStyles.Any,
                         CultureInfo.InvariantCulture,
                         out var pkg) ? pkg : 0,
-                    Quantity = decimal.TryParse(prod.Element(ns + "qCom")?.Value, out var qty) ? qty : 0,
+                    Quantity = int.TryParse(prod.Element(ns + "qCom")?.Value, out var qty) ? qty : 0,
                     ShippingCost = decimal.TryParse(prod.Element(ns + "vFrete")?.Value, out var shippingCost) ? shippingCost : 0
                 })
                 .ToList() ?? [];
 
             return new PurchasePreviewDto
             {
+                StoreDocumentNumber = storeDocumentNumber,
+                SupplierInformation = supplierData,
                 FiscalDocument = fiscalDocument,
-                Store = store,
-                Supplier = supplier,
                 Products = products,
                 TotalAmount = products.Sum(p => p.Total)
             };

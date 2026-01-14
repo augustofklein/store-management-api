@@ -34,6 +34,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnType("timestamp")
                 .IsRequired();
 
+            builder.Property(i => i.PurchaseEntryDate)
+                .HasColumnName("purchase_entry_date")
+                .HasColumnType("timestamp")
+                .IsRequired();
+
             builder.Property(i => i.TotalAmount)
                 .HasColumnName("total_amount")
                 .HasColumnType("decimal(10,2)")

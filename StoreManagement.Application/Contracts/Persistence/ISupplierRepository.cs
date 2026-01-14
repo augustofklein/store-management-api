@@ -11,5 +11,6 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<bool> ValidateSupplierExistsByIdAsync(int companyId, int supplierId, CancellationToken cancellationToken);
         Task<Result> AddSupplierAsync(int companyId, AddSupplierDto addSupplier, CancellationToken cancellationToken);
         Task<bool> ValidateSupplierExistsByDocumentNumberAsync(int companyId, string documentNumber, CancellationToken cancellationToken);
+        Task<int> ReturnSupplierIdByDocumentNumber(int companyId, string documentNumber, CancellationToken cancellationToken);
     }
 }
