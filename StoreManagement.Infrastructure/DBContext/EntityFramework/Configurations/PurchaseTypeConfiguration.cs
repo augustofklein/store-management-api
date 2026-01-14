@@ -24,6 +24,21 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
+            builder.Property(p => p.DocumentNumber)
+                .HasColumnName("document_number")
+                .HasColumnType("varchar(20)")
+                .IsRequired();
+
+            builder.Property(p => p.DocumentSerie)
+                .HasColumnName("document_serie")
+                .HasColumnType("varchar(10)")
+                .IsRequired();
+
+            builder.Property(p => p.DocumentMod)
+                .HasColumnName("document_mod")
+                .HasColumnType("char(2)")
+                .IsRequired();
+
             builder.Property(p => p.DocumentKey)
                 .HasColumnName("document_key")
                 .HasColumnType("varchar(44)")
@@ -31,12 +46,12 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(i => i.PurchaseDate)
                 .HasColumnName("purchase_date")
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamp with time zone")
                 .IsRequired();
 
             builder.Property(i => i.PurchaseEntryDate)
                 .HasColumnName("purchase_entry_date")
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamp with time zone")
                 .IsRequired();
 
             builder.Property(i => i.TotalAmount)

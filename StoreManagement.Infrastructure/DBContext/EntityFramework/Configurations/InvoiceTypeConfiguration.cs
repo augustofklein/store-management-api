@@ -26,7 +26,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             
             builder.Property(i => i.InvoiceDate)
                 .HasColumnName("invoice_date")
-                .HasColumnType("timestamp")
+                .HasColumnType("timestamp with time zone")
                 .IsRequired();
 
             builder.Property(i => i.TotalAmount)

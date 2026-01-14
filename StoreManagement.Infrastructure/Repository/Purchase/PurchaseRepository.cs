@@ -51,16 +51,21 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                 {
                     CompanyId = companyId,
                     SupplierId = purchase.SupplierId,
+                    DocumentNumber = purchase.Document.DocumentNumber,
+                    DocumentSerie = purchase.Document.DocumentSerie,
+                    DocumentMod = purchase.Document.DocumentMod,
+                    DocumentKey = purchase.Document.DocumentKey,
                     PurchaseDate = purchase.Document.DocumentDate,
+                    PurchaseEntryDate = purchase.PurchaseEntryDate,
                     TotalAmount = purchase.Products.Sum(i => i.Price * i.Quantity),
-                    PurchaseItems = [.. purchase.Products.Select(i => new PurchaseItemEntity
+                    PurchaseItems = purchase.Products.Select(i => new PurchaseItemEntity
                     {
                         ProductId = i.Id,
                         Price = i.Price,
-                        Quantity = i.Quantity,
                         Package = i.Package,
+                        Quantity = i.Quantity,
                         ShippingCost = i.ShippingCost
-                    })]
+                    }).ToList()
                 };
 
                 await dbContext.Purchase.AddAsync(purchaseEntity, cancellationToken);
