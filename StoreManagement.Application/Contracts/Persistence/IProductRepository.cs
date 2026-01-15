@@ -14,11 +14,11 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<bool> VerifyProductBySkuIdExistAsync(int companyId, string skuId, CancellationToken cancellationToken);
         Task<Result> VerifyArrayProductsExistAsync(int companyId, IEnumerable<int> productIds, CancellationToken cancellationToken);
         Task<Result> ValidateProductsByBarcodesAsync(int companyId, IEnumerable<string> barcodeProducts, CancellationToken cancellationToken);
-        Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTime movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken);
-        Task UpdateProductStockArrayAsync(ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken);
+        Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTimeOffset movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken);
+        Task<Result> UpdateProductStockArrayAsync(int companyId, ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken);
         Task<bool> ProductExistsInInvoicesAsync(int companyId, int productId, CancellationToken cancellationToken);
         Task<bool> ProductExistsInPurchasesAsync(int companyId, int productId, CancellationToken cancellationToken);
         Task<IEnumerable<ProductDto>> ReturnProductsByBarcodeAsync(int companyId, List<string> barcodes, CancellationToken cancellationToken);
-        Task<Result> UpdateAverageCostAsync(int companyId, int productId, int purchaseQuantity, decimal purchaseUnitPrice, CancellationToken cancellationToken);
+        Task<Result> UpdateProductAverageCostArrayAsync(int companyId, List<AddProductMovementDto> items, CancellationToken cancellationToken);
     }
 }

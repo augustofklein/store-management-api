@@ -12,7 +12,6 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
         public async Task<Result<IEnumerable<InvoiceDto>>> ReturnAllInvoicesAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Invoice
-                .AsNoTracking()
                 .Include(i => i.InvoiceItems)
                     .ThenInclude(ii => ii.Product)
                 .Where(i => i.CompanyId == companyId)

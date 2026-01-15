@@ -24,8 +24,10 @@ namespace StoreManagement.Application.Invoice.Handler
             {
                 await invoiceRepository.AddInvoiceAsync(mapper.Map<AddInvoiceDto>(command), cancellationToken);
 
-                await productRepository.UpdateProductStockArrayAsync(ProductMovementEnum.INVOICE, mapper.Map<List<UpdateProductStockDto>>(command.InvoiceItems), cancellationToken);
-                
+                var updateStockResult = await productRepository.UpdateProductStockArrayAsync(command.CompanyId, ProductMovementEnum.INVOICE, mapper.Map<List<UpdateProductStockDto>>(command.InvoiceItems), cancellationToken);
+                if(updateStockResult.IsFailure)
+                    return Result.Failure(updateStockResult.Error);
+
                 await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.INVOICE, command.InvoiceDate, mapper.Map<List<AddProductMovementDto>>(command.InvoiceItems), cancellationToken);
 
                 await eFTransactionManager.CommitAsync(cancellationToken);

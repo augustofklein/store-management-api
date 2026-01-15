@@ -12,7 +12,6 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
         public async Task<Result<IEnumerable<SupplierDto>>> ReturnAllSuppliersAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Supplier
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -27,7 +26,6 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
         public async Task<bool> ValidatePurchaseLinkedAsync(int companyId, int supplierId, CancellationToken cancellationToken)
         {
             return await dbContext.Purchase
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId && i.SupplierId == supplierId)
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
@@ -50,7 +48,6 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
         public async Task<bool> ValidateSupplierExistsByIdAsync(int companyId, int supplierId, CancellationToken cancellationToken)
         {
             return await dbContext.Supplier
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId && i.Id == supplierId)
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
@@ -73,7 +70,6 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
         public async Task<bool> ValidateSupplierExistsByDocumentNumberAsync(int companyId, string documentNumber, CancellationToken cancellationToken)
         {
             return await dbContext.Supplier
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId && i.DocumentNumber == documentNumber)
                 .FirstOrDefaultAsync(cancellationToken) != null;
         }
@@ -81,7 +77,6 @@ namespace StoreManagement.Infrastructure.Repository.Supplier
         public async Task<int> ReturnSupplierIdByDocumentNumber(int companyId, string documentNumber, CancellationToken cancellationToken)
         {
             return await dbContext.Supplier
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId && i.DocumentNumber == documentNumber)
                 .Select(i => i.Id)
                 .FirstOrDefaultAsync(cancellationToken);

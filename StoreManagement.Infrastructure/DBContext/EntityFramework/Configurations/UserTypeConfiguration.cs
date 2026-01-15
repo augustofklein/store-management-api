@@ -30,7 +30,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(u => u.CreatedAt)
                 .HasColumnName("created_at")
-                .HasColumnType("timestamp");
+                .HasColumnType("timestamp with time zone");
         }
     }
 }

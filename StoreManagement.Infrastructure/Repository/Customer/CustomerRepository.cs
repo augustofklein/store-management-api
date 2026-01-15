@@ -26,7 +26,6 @@ namespace StoreManagement.Infrastructure.Repository.Customer
         public async Task<Result<IEnumerable<CustomerDto>>> ReturnAllCustomersAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Customers
-                .AsNoTracking()
                 .Include(c => c.CustomerContacts)
                     .ThenInclude(cc => cc.ContactType)
                 .Where(c => c.CompanyId == companyId)

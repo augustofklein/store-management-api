@@ -5,7 +5,7 @@ using StoreManagement.Application.Purchase.Model;
 
 namespace StoreManagement.Application.Purchase.Service
 {
-    public class PurchaseService(ICompanyRepository companyRepository, IProductRepository productRepository, ISupplierRepository supplierRepository) : IPurchaseService
+    public class PurchaseService(IPurchaseRepository purchaseRepository, ICompanyRepository companyRepository, IProductRepository productRepository, ISupplierRepository supplierRepository) : IPurchaseService
     {
         public async Task<Result> EnrichAndValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
         {
@@ -54,10 +54,13 @@ namespace StoreManagement.Application.Purchase.Service
             if(command.PurchaseEntryDate > DateTimeOffset.Now.DateTime)
                 return Result.Failure("Purchase entry date cannot be in the future.");
 
-            if(!await supplierRepository.ValidateSupplierExistsByIdAsync(command.CompanyId, command.SupplierId, cancellationToken))
+            if(await purchaseRepository.ValidateExistsPurchaseByDocumentKey(command.CompanyId, command.Document.DocumentKey, cancellationToken))
+                return Result.Failure($"A purchase with document key {command.Document.DocumentKey} already exists.");
+
+            if (!await supplierRepository.ValidateSupplierExistsByIdAsync(command.CompanyId, command.SupplierId, cancellationToken))
                 return Result.Failure($"Supplier with ID {command.SupplierId} does not exist.");
 
-            var productValidation = await productRepository.VerifyArrayProductsExistAsync(command.CompanyId, command.Products.Select(x => x.Id), cancellationToken);
+            var productValidation = await productRepository.VerifyArrayProductsExistAsync(command.CompanyId, command.Products.Select(x => x.ProductId), cancellationToken);
             if(productValidation.IsFailure)
                 return Result.Failure(productValidation.Error);
 

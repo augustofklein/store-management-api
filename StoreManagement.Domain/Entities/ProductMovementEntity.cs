@@ -10,7 +10,7 @@ namespace StoreManagement.Domain.Entities
         public ProductMovementEnum MovementType { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public virtual ProductEntity Product { get; set; } = null!;
     }

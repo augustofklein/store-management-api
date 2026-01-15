@@ -106,7 +106,10 @@ namespace StoreManagement.Application.Purchase.XML
                         NumberStyles.Any,
                         CultureInfo.InvariantCulture,
                         out var pkg) ? pkg : 0,
-                    Quantity = int.TryParse(prod.Element(ns + "qCom")?.Value, out var qty) ? qty : 0,
+                    Quantity = int.TryParse(prod.Element(ns + "qCom")?.Value,
+                        NumberStyles.Any,
+                        CultureInfo.InvariantCulture,
+                        out var qty) ? qty : 0,
                     ShippingCost = decimal.TryParse(prod.Element(ns + "vFrete")?.Value, out var shippingCost) ? shippingCost : 0
                 })
                 .ToList() ?? [];

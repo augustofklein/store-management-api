@@ -13,7 +13,6 @@ namespace StoreManagement.Infrastructure.Repository.Auth
         public async Task<Result> AuthenticateUserForCompanyAsync(string email, string password, int companyId, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email && u.IsActive, cancellationToken);
 
             if (user == null)
@@ -23,7 +22,6 @@ namespace StoreManagement.Infrastructure.Repository.Auth
                 return Result.Failure("Invalid email or password.");
 
             var hasAccessToCompany = await _dbContext.UserCompanies
-                .AsNoTracking()
                 .AnyAsync(uc =>
                     uc.UserId == user.Id &&
                     uc.CompanyId == companyId &&
@@ -39,7 +37,6 @@ namespace StoreManagement.Infrastructure.Repository.Auth
         public async Task<Result> EnsureUserExistsAsync(string email, string password, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email && u.IsActive, cancellationToken);
 
             if (user == null)
@@ -58,7 +55,6 @@ namespace StoreManagement.Infrastructure.Repository.Auth
                 return Result.Failure<IEnumerable<UserCompaniesDto>>(userValidation.Error);
 
             var userCompanies = await _dbContext.UserCompanies
-                .AsNoTracking()
                 .Where(uc => uc.User.Email == email && uc.IsActive)
                 .Select(uc => new UserCompaniesDto
                 {

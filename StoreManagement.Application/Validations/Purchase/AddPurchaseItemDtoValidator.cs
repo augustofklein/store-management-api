@@ -7,7 +7,7 @@ namespace StoreManagement.Application.Validations.Purchase
     {
         public AddPurchaseItemDtoValidator()
         {
-            RuleFor(x => x.Id)
+            RuleFor(x => x.ProductId)
                 .NotEmpty()
                 .WithMessage("Product Id is required.")
                 .GreaterThan(0)

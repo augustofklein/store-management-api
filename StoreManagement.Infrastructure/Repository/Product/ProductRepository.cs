@@ -78,7 +78,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
         public async Task<Result<IEnumerable<ProductDto>>> GetProductsAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Products
-                .AsNoTracking()
                 .Where(p => p.CompanyId == companyId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -112,7 +111,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
         public async Task<Result> VerifyArrayProductsExistAsync(int companyId, IEnumerable<int> productIds, CancellationToken cancellationToken)
         {
             var existingProductIds = await dbContext.Products
-                .AsNoTracking()
                 .Where(p => p.CompanyId == companyId && productIds.Contains(p.Id))
                 .Select(p => p.Id)
                 .ToListAsync(cancellationToken);
@@ -128,7 +126,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
         public async Task<Result> ValidateProductsByBarcodesAsync(int companyId, IEnumerable<string> barcodeProducts, CancellationToken cancellationToken)
         {
             var existingProductIds = await dbContext.Products
-                .AsNoTracking()
                 .Where(p => p.CompanyId == companyId && barcodeProducts.Contains(p.Barcode))
                 .Select(p => p.Barcode)
                 .ToListAsync(cancellationToken);
@@ -141,7 +138,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTime movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken)
+        public async Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTimeOffset movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken)
         {
             var productMovements = items.Select(ii => new ProductMovementEntity
             {
@@ -155,38 +152,43 @@ namespace StoreManagement.Infrastructure.Repository.Product
             await dbContext.ProductMovements.AddRangeAsync(productMovements, cancellationToken);
         }
 
-        public async Task UpdateProductStockArrayAsync(ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken)
+        public async Task<Result> UpdateProductStockArrayAsync(int companyId, ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken)
         {
+            var productIds = items
+                .Select(i => i.ProductId)
+                .Distinct()
+                .ToList();
+
+            var products = await dbContext.Products
+                .Where(p => p.CompanyId == companyId && productIds.Contains(p.Id))
+                .ToDictionaryAsync(p => p.Id, cancellationToken);
+
             foreach (var item in items)
             {
-                var product = await dbContext.Products
-                    .FirstOrDefaultAsync(
-                        p => p.Id == item.ProductId,
-                        cancellationToken
-                    );
+                if (!products.TryGetValue(item.ProductId, out var product))
+                    return Result.Failure($"Product with ID {item.ProductId} not found.");
 
-                if (product != null)
+                switch (movementType)
                 {
-                    if (movementType == ProductMovementEnum.INVOICE)
-                    {
+                    case ProductMovementEnum.INVOICE:
                         product.Stock -= item.Quantity;
-                    }
-                    else if (movementType == ProductMovementEnum.PURCHASE)
-                    {
+                        break;
+
+                    case ProductMovementEnum.PURCHASE:
                         product.Stock += item.Quantity;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Invalid product movement type.");
-                    }
+                        break;
+
+                    default:
+                        return Result.Failure("Invalid product movement type.");
                 }
             }
+
+            return Result.Success();
         }
 
         public async Task<bool> ProductExistsInInvoicesAsync(int companyId, int productId, CancellationToken cancellationToken)
         {
             return await dbContext.Invoice
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId)
                 .SelectMany(i => i.InvoiceItems)
                 .AnyAsync(ii => ii.ProductId == productId, cancellationToken);
@@ -195,7 +197,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
         public async Task<bool> ProductExistsInPurchasesAsync(int companyId, int productId, CancellationToken cancellationToken)
         {
             return await dbContext.Purchase
-                .AsNoTracking()
                 .Where(i => i.CompanyId == companyId)
                 .SelectMany(i => i.PurchaseItems)
                 .AnyAsync(ii => ii.ProductId == productId, cancellationToken);
@@ -204,7 +205,6 @@ namespace StoreManagement.Infrastructure.Repository.Product
         public async Task<IEnumerable<ProductDto>> ReturnProductsByBarcodeAsync(int companyId, List<string> barcodes, CancellationToken cancellationToken)
         {
             return await dbContext.Products
-                .AsNoTracking()
                 .Where(p => p.CompanyId == companyId && barcodes.Contains(p.Barcode))
                 .Select(p => new ProductDto
                 {
@@ -219,38 +219,41 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Result> UpdateAverageCostAsync(int companyId, int productId, int purchaseQuantity, decimal purchaseUnitPrice, CancellationToken cancellationToken)
+        public async Task<Result> UpdateProductAverageCostArrayAsync(int companyId, List<AddProductMovementDto> items, CancellationToken cancellationToken)
         {
-            var product = await dbContext.Products
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.CompanyId == companyId && p.Id == productId, cancellationToken);
+            var productIds = items
+                .Select(i => i.ProductId)
+                .Distinct()
+                .ToList();
 
-            if (product == null)
-                return Result.Failure($"Product with ID {productId} not found.");
+            var products = await dbContext.Products
+                .Where(p => p.CompanyId == companyId && productIds.Contains(p.Id))
+                .ToDictionaryAsync(p => p.Id, cancellationToken);
 
-            if (product.Stock == 0)
+            foreach (var item in items)
             {
-                product.AverageCost = purchaseUnitPrice;
-                product.Stock = purchaseQuantity;
+                if (!products.TryGetValue(item.ProductId, out var product))
+                    return Result.Failure($"Product with ID {item.ProductId} not found.");
+
+                if (product.Stock == 0)
+                {
+                    product.AverageCost = item.Price;
+                }
+                else
+                {
+                    var totalCurrentValue =
+                        product.Stock * product.AverageCost;
+
+                    var totalPurchaseValue =
+                        item.Quantity * item.Price;
+
+                    var newStockQuantity =
+                        product.Stock + item.Quantity;
+
+                    product.AverageCost =
+                        (totalCurrentValue + totalPurchaseValue) / newStockQuantity;
+                }
             }
-            else
-            {
-                var totalCurrentValue =
-                    product.Stock * product.AverageCost;
-
-                var totalPurchaseValue =
-                    purchaseQuantity * purchaseUnitPrice;
-
-                var newStockQuantity =
-                    product.Stock + purchaseQuantity;
-
-                product.AverageCost =
-                    (totalCurrentValue + totalPurchaseValue) / newStockQuantity;
-
-                product.Stock = newStockQuantity;
-            }
-
-            dbContext.Products.Update(product);
 
             return Result.Success();
         }

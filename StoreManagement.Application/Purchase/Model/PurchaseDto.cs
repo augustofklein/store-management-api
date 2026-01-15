@@ -3,7 +3,7 @@
     public class PurchaseDto
     {
         public int PurchaseId { get; set; }
-        public DateTime PurchaseDate { get; set; }
+        public DateTimeOffset PurchaseDate { get; set; }
         public decimal TotalAmount { get; set; }
         public required SupplierPurchase Supplier {  get; set; }
         public List<PurchaseItem> Items { get; set; } = [];

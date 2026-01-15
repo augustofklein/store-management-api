@@ -6,6 +6,6 @@
         public string DocumentSerie { get; set; } = string.Empty;
         public string DocumentMod { get; set; } = string.Empty;
         public string DocumentKey { get; set; } = string.Empty;
-        public DateTime DocumentDate { get; set; }
+        public DateTimeOffset DocumentDate { get; set; }
     }
 }

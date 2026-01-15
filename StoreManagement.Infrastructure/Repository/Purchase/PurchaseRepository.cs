@@ -1,18 +1,20 @@
-﻿using CSharpFunctionalExtensions;
+﻿using AutoMapper;
+using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
+using StoreManagement.Application.Product.Model;
 using StoreManagement.Application.Purchase.Model;
 using StoreManagement.Domain.Entities;
+using StoreManagement.Domain.Enums;
 using StoreManagement.Infrastructure.DBContext;
 
 namespace StoreManagement.Infrastructure.Repository.Purchase
 {
-    public class PurchaseRepository(AppDbContext dbContext, IProductRepository productRepository) : IPurchaseRepository
+    public class PurchaseRepository(AppDbContext dbContext, IProductRepository productRepository, IMapper mapper, IEFTransactionManager eFTransactionManager) : IPurchaseRepository
     {
         public async Task<Result<IEnumerable<PurchaseDto>>> ReturnAllPuchasesAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             return await dbContext.Purchase
-                .AsNoTracking()
                 .Include(i => i.PurchaseItems)
                     .ThenInclude(ii => ii.Product)
                 .Where(i => i.CompanyId == companyId)
@@ -41,9 +43,15 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                 }).ToListAsync(cancellationToken);
         }
 
+        public async Task<bool> ValidateExistsPurchaseByDocumentKey(int companyId, string documentId, CancellationToken cancellationToken)
+        {
+            return await dbContext.Purchase
+                .AnyAsync(i => i.CompanyId == companyId && i.DocumentKey == documentId, cancellationToken);
+        }
+
         public async Task<Result> AddPurchaseAsync(int companyId, AddPurchaseDto purchase, CancellationToken cancellationToken)
         {
-            await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            await eFTransactionManager.BeginAsync(cancellationToken);
 
             try
             {
@@ -58,29 +66,33 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                     PurchaseDate = purchase.Document.DocumentDate,
                     PurchaseEntryDate = purchase.PurchaseEntryDate,
                     TotalAmount = purchase.Products.Sum(i => i.Price * i.Quantity),
-                    PurchaseItems = purchase.Products.Select(i => new PurchaseItemEntity
+                    PurchaseItems = [.. purchase.Products.Select(i => new PurchaseItemEntity
                     {
-                        ProductId = i.Id,
+                        ProductId = i.ProductId,
                         Price = i.Price,
                         Package = i.Package,
                         Quantity = i.Quantity,
                         ShippingCost = i.ShippingCost
-                    }).ToList()
+                    })]
                 };
 
                 await dbContext.Purchase.AddAsync(purchaseEntity, cancellationToken);
 
-                foreach(var item in purchase.Products)
-                {
-                    await productRepository.UpdateAverageCostAsync(companyId, item.Id, item.Quantity, item.Price, cancellationToken);
-                }
+                var updateAverageCostResult = await productRepository.UpdateProductAverageCostArrayAsync(companyId, mapper.Map<List<AddProductMovementDto>>(purchase.Products), cancellationToken);
+                if(updateAverageCostResult.IsFailure)
+                    return Result.Failure(updateAverageCostResult.Error);
 
-                await dbContext.SaveChangesAsync(cancellationToken);
-                await dbContext.Database.CommitTransactionAsync(cancellationToken);
+                var productMovementResult = await productRepository.UpdateProductStockArrayAsync(companyId, ProductMovementEnum.PURCHASE, mapper.Map<List<UpdateProductStockDto>>(purchase.Products), cancellationToken);
+                if(productMovementResult.IsFailure)
+                    return Result.Failure(productMovementResult.Error);
+
+                await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.PURCHASE, purchase.PurchaseEntryDate, mapper.Map<List<AddProductMovementDto>>(purchase.Products), cancellationToken);
+
+                await eFTransactionManager.CommitAsync(cancellationToken);
             }
             catch (Exception ex)
             {
-                await dbContext.Database.RollbackTransactionAsync(cancellationToken);
+                await eFTransactionManager.RollbackAsync(cancellationToken);
                 return Result.Failure($"An error occurred while adding the purchase: {ex.Message}");
             }
 
