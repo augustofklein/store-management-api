@@ -24,7 +24,16 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                 {
                     PurchaseId = i.Id,
                     PurchaseDate = i.PurchaseDate,
+                    PurchaseEntryDate = i.PurchaseEntryDate,
                     TotalAmount = i.TotalAmount,
+                    Document = new PurchaseDto.PurchaseDocument
+                    {
+                        DocumentNumber = i.DocumentNumber,
+                        DocumentSerie = i.DocumentSerie,
+                        DocumentMod = i.DocumentMod,
+                        DocumentKey = i.DocumentKey,
+                        DocumentDate = i.PurchaseDate
+                    },
                     Supplier = new PurchaseDto.SupplierPurchase
                     {
                         Id = i.Supplier.Id,
@@ -38,6 +47,7 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                         Barcode = ii.Product.Barcode,
                         Description = ii.Product.Description,
                         Price = ii.Price,
+                        Package = ii.Package,
                         Quantity = ii.Quantity
                     }).ToList()
                 }).ToListAsync(cancellationToken);

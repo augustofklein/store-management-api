@@ -19,19 +19,23 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(c => c.CompanyId)
                 .HasColumnName("company_id")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(c => c.DocumentNumber)
                 .HasColumnName("document_number")
-                .HasColumnType("varchar(11)");
-            
+                .HasColumnType("varchar(11)")
+                .IsRequired();
+
             builder.Property(c => c.Name)
                 .HasColumnName("name")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(100)")
+                .IsRequired();
 
             builder.Property(c => c.Address)
                 .HasColumnName("address")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(100)")
+                .IsRequired();
 
             builder.HasOne(c => c.Company)
                .WithMany(c => c.Customers)

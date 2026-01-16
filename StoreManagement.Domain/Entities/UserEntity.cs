@@ -8,7 +8,7 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
         public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public ICollection<UserCompanyEntity> UserCompanies { get; set; } = [];
     }

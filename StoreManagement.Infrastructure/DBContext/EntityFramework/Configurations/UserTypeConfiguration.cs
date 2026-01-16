@@ -18,19 +18,23 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(u => u.Email)
                 .HasColumnName("email")
-                .HasColumnType("varchar(255)");
+                .HasColumnType("varchar(255)")
+                .IsRequired();
 
             builder.Property(u => u.PasswordHash)
                 .HasColumnName("password_hash")
-                .HasColumnType("varchar(200)");
+                .HasColumnType("varchar(200)")
+                .IsRequired();
 
             builder.Property(u => u.IsActive)
                 .HasColumnName("is_active")
-                .HasColumnType("boolean");
+                .HasColumnType("boolean")
+                .IsRequired();
 
             builder.Property(u => u.CreatedAt)
                 .HasColumnName("created_at")
-                .HasColumnType("timestamp with time zone");
+                .HasColumnType("timestamptz")
+                .IsRequired();
         }
     }
 }

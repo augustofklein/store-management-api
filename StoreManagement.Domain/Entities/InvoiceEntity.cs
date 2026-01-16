@@ -7,7 +7,7 @@ namespace StoreManagement.Domain.Entities
         public int CompanyId { get; set; }
         public int CustomerId { get; set; }
         public int Id { get; set; }
-        public DateTime InvoiceDate { get; set; }
+        public DateTimeOffset InvoiceDate { get; set; }
         public decimal TotalAmount { get; set; }
 
         public virtual CompanyEntity Company { get; set; } = null!;

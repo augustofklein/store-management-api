@@ -14,11 +14,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             
             builder.Property(i => i.CompanyId)
                 .HasColumnName("company_id")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(i => i.CustomerId)
                 .HasColumnName("customer_id")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(i => i.Id)
                 .HasColumnName("id")
@@ -26,7 +28,7 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             
             builder.Property(i => i.InvoiceDate)
                 .HasColumnName("invoice_date")
-                .HasColumnType("timestamp with time zone")
+                .HasColumnType("timestamptz")
                 .IsRequired();
 
             builder.Property(i => i.TotalAmount)

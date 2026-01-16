@@ -67,7 +67,7 @@ namespace StoreManagement.Application.Purchase.XML
                     out var parsedDate
                 )
                 ? parsedDate.UtcDateTime
-                : DateTime.UtcNow
+                : DateTimeOffset.UtcNow
             };
 
             var supplierData = new PurchasePreviewDto.SupplierPreviewDto

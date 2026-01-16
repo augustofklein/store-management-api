@@ -17,10 +17,14 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .ValueGeneratedOnAdd();
 
             builder.Property(c => c.CustomerId)
-                .HasColumnName("customer_id");
+                .HasColumnName("customer_id")
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(c => c.ContactTypeId)
-                .HasColumnName("contact_type_id");
+                .HasColumnName("contact_type_id")
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(c => c.Contact)
                 .HasColumnName("contact")

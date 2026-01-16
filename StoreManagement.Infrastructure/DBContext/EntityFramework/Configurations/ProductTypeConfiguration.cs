@@ -18,7 +18,8 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(p => p.CompanyId)
                 .HasColumnName("company_id")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(p => p.Id)
                 .HasColumnName("id")
@@ -26,23 +27,28 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(p => p.SkuId)
                 .HasColumnName("sku_id")
-                .HasColumnType("varchar(20)");
+                .HasColumnType("varchar(20)")
+                .IsRequired();
 
             builder.Property(p => p.Status)
                 .HasColumnName("status")
-                .HasColumnType("boolean");
+                .HasColumnType("boolean")
+                .IsRequired();
 
             builder.Property(p => p.Barcode)
                 .HasColumnName("barcode")
-                .HasColumnType("varchar(13)");
+                .HasColumnType("varchar(13)")
+                .IsRequired();
 
             builder.Property(p => p.Description)
                 .HasColumnName("description")
-                .HasColumnType("varchar(100)");
+                .HasColumnType("varchar(100)")
+                .IsRequired();
 
             builder.Property(p => p.Stock)
                 .HasColumnName("stock")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(pp => pp.AverageCost)
                 .HasColumnName("average_cost")

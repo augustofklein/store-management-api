@@ -18,7 +18,8 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(c => c.Description)
                 .HasColumnName("description")
-                .HasColumnType("varchar(50)");
+                .HasColumnType("varchar(50)")
+                .IsRequired();
         }
     }
 }

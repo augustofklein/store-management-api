@@ -3,7 +3,7 @@
     public class InvoiceDto
     {
         public int InvoiceId { get; set; }
-        public DateTime InvoiceDate { get; set; }
+        public DateTimeOffset InvoiceDate { get; set; }
         public decimal TotalAmount { get; set; }
         public required CustomerInvoice Customer { get; set; }
         public List<InvoiceItem> Items { get; set; } = [];

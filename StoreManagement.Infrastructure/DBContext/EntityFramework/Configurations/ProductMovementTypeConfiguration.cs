@@ -18,8 +18,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(pm => pm.ProductId)
                 .HasColumnName("product_id")
+                .HasColumnType("integer")
                 .IsRequired();
-            
+
             builder.Property(pm => pm.MovementType)
                 .HasColumnName("movement_type")
                 .HasColumnType("smallint")
@@ -32,12 +33,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(pp => pp.Price)
                 .HasColumnName("price")
-                .HasColumnType("decimal(10,2)")
+                .HasColumnType("numeric(10,2)")
                 .IsRequired();
 
             builder.Property(pm => pm.CreatedAt)
                 .HasColumnName("created_at")
-                .HasColumnType("timestamp with time zone")
+                .HasColumnType("timestamptz")
+                .HasDefaultValueSql("now()")
                 .IsRequired();
 
             builder.HasOne(p => p.Product)

@@ -18,23 +18,28 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(uc => uc.CompanyId)
                 .HasColumnName("company_id")
-                .HasColumnType("int");
-            
+                .HasColumnType("int")
+                .IsRequired();
+
             builder.Property(uc => uc.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("int");
-            
+                .HasColumnType("int")
+                .IsRequired();
+
             builder.Property(uc => uc.RoleId)
                 .HasColumnName("role_id")
-                .HasColumnType("int");
+                .HasColumnType("int")
+                .IsRequired();
 
             builder.Property(u => u.IsActive)
                 .HasColumnName("is_active")
-                .HasColumnType("boolean");
+                .HasColumnType("boolean")
+                .IsRequired();
 
             builder.Property(u => u.CreatedAt)
                 .HasColumnName("created_at")
-                .HasColumnType("timestamp with time zone");
+                .HasColumnType("timestamptz")
+                .IsRequired();
 
             // TODO: Review the DeleteBehavior property
             builder.HasOne(uc => uc.Company)

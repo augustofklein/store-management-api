@@ -1,3 +1,4 @@
+//REVIEW THE TABLE CREATION
 CREATE TABLE companies (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     document_number VARCHAR(14) NOT NULL,
@@ -24,7 +25,7 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL,
     password_hash VARCHAR(200) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT uq_user_email UNIQUE (email)
 );
@@ -35,7 +36,7 @@ CREATE TABLE user_companies (
     role_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_user_companies_company
         FOREIGN KEY (company_id)
@@ -124,7 +125,7 @@ CREATE TABLE invoices (
     company_id INTEGER NOT NULL,
     customer_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    invoice_date TIMESTAMP NOT NULL,
+    invoice_date TIMESTAMPTZ NOT NULL,
     total_amount DECIMAL(12,2),
 
     CONSTRAINT fk_invoices_company
@@ -187,8 +188,8 @@ CREATE TABLE purchases (
     document_serie VARCHAR(10) NOT NULL,
     document_mod CHAR(2),
     document_key VARCHAR(44),
-    purchase_date TIMESTAMP NOT NULL,
-    purchase_entry_date TIMESTAMP NOT NULL,
+    purchase_date TIMESTAMPTZ NOT NULL,
+    purchase_entry_date TIMESTAMPTZ NOT NULL,
     total_amount DECIMAL(12,2),
 
     CONSTRAINT fk_purchases_company
@@ -238,11 +239,17 @@ CREATE TABLE product_movements (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     movement_type SMALLINT NOT NULL,
     quantity INTEGER NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
+    price NUMERIC(10, 2) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_product_movements
         FOREIGN KEY (product_id)
         REFERENCES products(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_product_movements_type
+    CHECK (movement_type IN (1, 2, 3))
 );
+
+CREATE INDEX idx_product_movements_product_date
+ON product_movements (product_id, created_at DESC);

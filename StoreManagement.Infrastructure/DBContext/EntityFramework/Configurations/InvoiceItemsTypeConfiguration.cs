@@ -12,17 +12,19 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.HasKey(i => i.Id);
 
-            builder.Property(i => i.InvoiceId)
-                .HasColumnName("invoice_id")
-                .HasColumnType("integer");
-
-            builder.Property(i => i.ProductId)
-                .HasColumnName("product_id")
-                .HasColumnType("integer");
-
             builder.Property(i => i.Id)
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
+
+            builder.Property(i => i.InvoiceId)
+                .HasColumnName("invoice_id")
+                .HasColumnType("integer")
+                .IsRequired();
+
+            builder.Property(i => i.ProductId)
+                .HasColumnName("product_id")
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(i => i.Price)
                 .HasColumnName("price")

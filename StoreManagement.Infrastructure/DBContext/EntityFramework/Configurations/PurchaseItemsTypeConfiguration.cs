@@ -14,11 +14,13 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(i => i.PurchaseId)
                 .HasColumnName("purchase_id")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(i => i.ProductId)
                 .HasColumnName("product_id")
-                .HasColumnType("integer");
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(i => i.Id)
                 .HasColumnName("id")

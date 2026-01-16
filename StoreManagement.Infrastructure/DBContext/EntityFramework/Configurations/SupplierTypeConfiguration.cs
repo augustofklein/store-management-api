@@ -11,13 +11,14 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.HasKey(s => s.Id);
 
-            builder.Property(c => c.CompanyId)
-                .HasColumnName("company_id")
-                .HasColumnType("integer");
-
             builder.Property(s => s.Id)
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
+
+            builder.Property(c => c.CompanyId)
+                .HasColumnName("company_id")
+                .HasColumnType("integer")
+                .IsRequired();
 
             builder.Property(s => s.DocumentNumber)
                 .HasColumnName("document_number")
