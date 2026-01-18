@@ -10,27 +10,46 @@ using System.ComponentModel.Design;
 
 namespace StoreManagement.Infrastructure.Repository.Product
 {
-    public class ProductRepository(AppDbContext dbContext) : IProductRepository
+    public class ProductRepository(AppDbContext dbContext, IEFTransactionManager eFTransactionManager) : IProductRepository
     {
         public async Task<Result> AddProductAsync(int companyId, string skuId, bool status, string barcode, string description, int stock, decimal price, CancellationToken cancellationToken)
         {
-            var product = new ProductEntity
-            {
-                CompanyId = companyId,
-                Id = 0,
-                SkuId = skuId.Trim(),
-                Status = status,
-                Barcode = barcode,
-                Description = description,
-                Stock = stock,
-                ProductPrice = new ProductPriceEntity
-                {
-                    Price = price
-                }
-            };
+            await eFTransactionManager.BeginAsync(cancellationToken);
 
-            await dbContext.Products.AddAsync(product, cancellationToken);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            try
+            {
+                var product = new ProductEntity
+                {
+                    CompanyId = companyId,
+                    SkuId = skuId.Trim(),
+                    Status = status,
+                    Barcode = barcode,
+                    Description = description,
+                    Stock = stock,
+                    ProductPrice = new ProductPriceEntity
+                    {
+                        Price = price
+                    }
+                };
+
+                var productMovement = new ProductMovementEntity
+                {
+                    Product = product,
+                    MovementType = ProductMovementEnum.INITIAL,
+                    Quantity = stock,
+                    Price = price,
+                    CreatedAt = DateTimeOffset.UtcNow
+                };
+
+                await dbContext.Products.AddAsync(product, cancellationToken);
+                await dbContext.ProductMovements.AddAsync(productMovement, cancellationToken);
+                await eFTransactionManager.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await eFTransactionManager.RollbackAsync(cancellationToken);
+                return Result.Failure($"An error occurred while adding the product: {ex.Message}");
+            }
 
             return Result.Success();
         }

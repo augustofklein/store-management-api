@@ -51,7 +51,7 @@ namespace StoreManagement.Application.Purchase.Service
 
         public async Task<Result> ValidateAddPurchaseAsync(AddPurchaseCommand command, CancellationToken cancellationToken)
         {
-            if(command.PurchaseEntryDate > DateTimeOffset.Now.DateTime)
+            if(command.Document.DocumentDate > DateTimeOffset.Now.DateTime)
                 return Result.Failure("Purchase entry date cannot be in the future.");
 
             if(await purchaseRepository.ValidateExistsPurchaseByDocumentKey(command.CompanyId, command.Document.DocumentKey, cancellationToken))

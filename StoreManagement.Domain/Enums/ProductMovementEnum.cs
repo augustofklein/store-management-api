@@ -2,7 +2,7 @@
 {
     public enum ProductMovementEnum
     {
-        REGISTRATION = 1,
+        INITIAL = 1,
         PURCHASE = 2,
         INVOICE = 3
     }
