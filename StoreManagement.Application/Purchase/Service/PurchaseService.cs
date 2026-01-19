@@ -9,7 +9,10 @@ namespace StoreManagement.Application.Purchase.Service
     {
         public async Task<Result> EnrichAndValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
         {
-            if(!await companyRepository.ExistsCompanyByDocumentNumberAsync(companyId, purchaseMapper.StoreDocumentNumber, cancellationToken))
+            if (purchaseMapper.Products.Count == 0)
+                return Result.Failure<PurchasePreviewDto>("No products found in XML.");
+
+            if (!await companyRepository.ExistsCompanyByDocumentNumberAsync(companyId, purchaseMapper.StoreDocumentNumber, cancellationToken))
                 return Result.Failure($"Store with document number {purchaseMapper.StoreDocumentNumber} does not exist.");
 
             if (!await supplierRepository.ValidateSupplierExistsByDocumentNumberAsync(companyId, purchaseMapper.SupplierInformation.DocumentNumber, cancellationToken))
