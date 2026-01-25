@@ -9,7 +9,7 @@ namespace StoreManagement.Application.Mapping
         public ProductProfile()
         {
             CreateMap<AddInvoiceItemsDto, AddProductMovementDto>();
-            CreateMap<AddInvoiceItemsDto, UpdateProductStockDto>();
+            CreateMap<AddInvoiceItemsDto, ProductStockDto>();
         }
     }
 }

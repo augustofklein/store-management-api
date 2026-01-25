@@ -15,10 +15,11 @@ namespace StoreManagement.Application.Contracts.Persistence
         Task<Result> VerifyArrayProductsExistAsync(int companyId, IEnumerable<int> productIds, CancellationToken cancellationToken);
         Task<Result> ValidateProductsByBarcodesAsync(int companyId, IEnumerable<string> barcodeProducts, CancellationToken cancellationToken);
         Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTimeOffset movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken);
-        Task<Result> UpdateProductStockArrayAsync(int companyId, ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken);
+        Task<Result> UpdateProductStockArrayAsync(int companyId, ProductMovementEnum movementType, List<ProductStockDto> items, CancellationToken cancellationToken);
         Task<bool> ProductExistsInInvoicesAsync(int companyId, int productId, CancellationToken cancellationToken);
         Task<bool> ProductExistsInPurchasesAsync(int companyId, int productId, CancellationToken cancellationToken);
         Task<IEnumerable<ProductDto>> ReturnProductsByBarcodeAsync(int companyId, List<string> barcodes, CancellationToken cancellationToken);
         Task<Result> UpdateProductAverageCostArrayAsync(int companyId, List<AddProductMovementDto> items, CancellationToken cancellationToken);
+        Task<Result> ValidateInvoiceProductsStockAsync(int companyId, List<ProductStockDto> items, CancellationToken cancellationToken);
     }
 }

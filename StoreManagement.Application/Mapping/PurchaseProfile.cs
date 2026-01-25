@@ -10,7 +10,7 @@ namespace StoreManagement.Application.Mapping
         public PurchaseProfile()
         {
             CreateMap<AddPurchaseCommand, AddPurchaseDto>();
-            CreateMap<AddPurchaseItemDto, UpdateProductStockDto>();
+            CreateMap<AddPurchaseItemDto, ProductStockDto>();
             CreateMap<AddPurchaseItemDto, AddProductMovementDto>();
         }
     }

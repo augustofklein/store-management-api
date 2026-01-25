@@ -50,7 +50,7 @@ namespace StoreManagement.Application.Purchase.Handler
                 if (updateAverageCostResult.IsFailure)
                     return Result.Failure(updateAverageCostResult.Error);
 
-                var productMovementResult = await productRepository.UpdateProductStockArrayAsync(command.CompanyId, ProductMovementEnum.PURCHASE, mapper.Map<List<UpdateProductStockDto>>(command.Products), cancellationToken);
+                var productMovementResult = await productRepository.UpdateProductStockArrayAsync(command.CompanyId, ProductMovementEnum.PURCHASE, mapper.Map<List<ProductStockDto>>(command.Products), cancellationToken);
                 if (productMovementResult.IsFailure)
                     return Result.Failure(productMovementResult.Error);
 

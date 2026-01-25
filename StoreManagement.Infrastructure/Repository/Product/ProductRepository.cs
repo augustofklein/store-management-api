@@ -171,7 +171,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             await dbContext.ProductMovements.AddRangeAsync(productMovements, cancellationToken);
         }
 
-        public async Task<Result> UpdateProductStockArrayAsync(int companyId, ProductMovementEnum movementType, List<UpdateProductStockDto> items, CancellationToken cancellationToken)
+        public async Task<Result> UpdateProductStockArrayAsync(int companyId, ProductMovementEnum movementType, List<ProductStockDto> items, CancellationToken cancellationToken)
         {
             var productIds = items
                 .Select(i => i.ProductId)
@@ -273,6 +273,49 @@ namespace StoreManagement.Infrastructure.Repository.Product
                         (totalCurrentValue + totalPurchaseValue) / newStockQuantity;
                 }
             }
+
+            return Result.Success();
+        }
+
+        public async Task<Result> ValidateInvoiceProductsStockAsync(int companyId, List<ProductStockDto> items, CancellationToken cancellationToken)
+        {
+            if (items == null)
+                return Result.Success();
+
+            var productIds = items
+                .Select(i => i.ProductId)
+                .Distinct()
+                .ToList();
+
+            if (!productIds.Any())
+                return Result.Success();
+
+            var products = await dbContext.Products
+                .Where(p => p.CompanyId == companyId && productIds.Contains(p.Id))
+                .Select(p => new { p.Id, p.Stock, p.SkuId })
+                .ToDictionaryAsync(p => p.Id, cancellationToken);
+
+            var missingProductIds = productIds.Except(products.Keys).ToList();
+            if (missingProductIds.Count != 0)
+                return Result.Failure($"The following product IDs do not exist: {string.Join(", ", missingProductIds)}");
+
+            var insufficient = new List<string>();
+            foreach (var item in items)
+            {
+                if (!products.TryGetValue(item.ProductId, out var product))
+                {
+                    insufficient.Add($"ProductId {item.ProductId} not found");
+                    continue;
+                }
+
+                if (product.Stock < item.Quantity)
+                {
+                    insufficient.Add($"ProductId {product.Id} (SKU: {product.SkuId}) - Available: {product.Stock}, Required: {item.Quantity}");
+                }
+            }
+
+            if (insufficient.Count != 0)
+                return Result.Failure($"Insufficient stock for: {string.Join("; ", insufficient)}");
 
             return Result.Success();
         }
