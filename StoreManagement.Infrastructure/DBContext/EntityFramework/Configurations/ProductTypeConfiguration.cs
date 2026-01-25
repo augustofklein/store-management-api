@@ -59,6 +59,10 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                .WithMany(p => p.Products)
                .HasForeignKey(p => p.CompanyId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(p => p.CompanyId).HasDatabaseName("idx_products_company_id");
+            builder.HasIndex(p => new { p.CompanyId, p.SkuId }).IsUnique();
+            builder.HasIndex(p => new { p.CompanyId, p.Barcode }).IsUnique();
         }
     }
 }

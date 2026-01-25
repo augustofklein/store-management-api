@@ -13,5 +13,6 @@ namespace StoreManagement.Infrastructure.DBContext.Model
         public required ICollection<CustomerEntity> Customers { get; set; }
         public required ICollection<InvoiceEntity> Invoices { get; set; }
         public required ICollection<PurchaseEntity> Purchases { get; set; }
+        public required ICollection<SupplierEntity> Suppliers { get; set; }
     }
 }

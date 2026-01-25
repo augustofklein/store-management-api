@@ -34,12 +34,15 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.HasOne(c => c.Customer)
                .WithMany(c => c.CustomerContacts)
                .HasForeignKey(c => c.CustomerId)
-               .OnDelete(DeleteBehavior.Restrict);
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(c => c.ContactType)
                .WithMany(c => c.CustomerContacts)
                .HasForeignKey(c => c.ContactTypeId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(cc => cc.CustomerId)
+                .HasDatabaseName("idx_customer_contact_customer_id");
         }
     }
 }

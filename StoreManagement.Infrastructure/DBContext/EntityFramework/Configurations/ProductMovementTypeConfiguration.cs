@@ -45,7 +45,10 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.HasOne(p => p.Product)
                .WithMany(p => p.ProductMovements)
                .HasForeignKey(p => p.ProductId)
-               .OnDelete(DeleteBehavior.Cascade);
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(pm => new { pm.ProductId, pm.CreatedAt })
+                .HasDatabaseName("idx_product_movements_product_date");
         }
     }
 }

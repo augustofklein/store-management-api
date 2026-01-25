@@ -9,6 +9,9 @@ namespace StoreManagement.Application.Purchase.Service
     {
         public async Task<Result> EnrichAndValidatePurchasePreviewAsync(int companyId, PurchasePreviewDto purchaseMapper, CancellationToken cancellationToken)
         {
+            if(purchaseMapper.FiscalDocument.DocumentStatus != 100)
+                return Result.Failure<PurchasePreviewDto>("Fiscal document is not authorized.");
+
             if (purchaseMapper.Products.Count == 0)
                 return Result.Failure<PurchasePreviewDto>("No products found in XML.");
 

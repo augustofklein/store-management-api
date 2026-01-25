@@ -46,6 +46,12 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
               .WithOne(x => x.Customer)
               .HasForeignKey(x => x.CustomerId)
               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(c => c.CompanyId)
+                .HasDatabaseName("idx_customers_company_id");
+            
+            builder.HasIndex(c => new { c.CompanyId, c.DocumentNumber })
+                .IsUnique();
         }
     }
 }

@@ -1,10 +1,9 @@
-//REVIEW THE TABLE CREATION
 CREATE TABLE companies (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     document_number VARCHAR(14) NOT NULL,
     name VARCHAR(50) NOT NULL,
 
-    CONSTRAINT uq_companies_name UNIQUE (document_number),
+    CONSTRAINT uq_companies_document_number UNIQUE (document_number),
 
     CONSTRAINT chk_companies_document_number_format
         CHECK (
@@ -41,44 +40,56 @@ CREATE TABLE user_companies (
     CONSTRAINT fk_user_companies_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_user_companies_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
-        ON DELETE CASCADE,
+        ON DELETE SET NULL,
 
     CONSTRAINT fk_user_companies_role
         FOREIGN KEY (role_id)
         REFERENCES user_roles(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT uq_user_companies_unique_assignment UNIQUE (company_id, user_id)
 );
 
 CREATE TABLE products (
     company_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     sku_id VARCHAR(20) NOT NULL,
-    status BOOLEAN NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT TRUE,
     barcode VARCHAR(13) NOT NULL,
     description VARCHAR(100) NOT NULL,
-    stock INTEGER NOT NULL,
-    average_cost DECIMAL(10, 2) NOT NULL,
+    stock INTEGER NOT NULL DEFAULT 0,
+    average_cost DECIMAL(10, 2) NOT NULL CHECK (average_cost >= 0),
 
     CONSTRAINT fk_products_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT,
+
+    CONSTRAINT uq_products_company_sku UNIQUE (company_id, sku_id),
+    CONSTRAINT uq_products_company_barcode UNIQUE (company_id, barcode),
+
+    CONSTRAINT chk_products_stock_non_negative CHECK (stock >= 0)
 );
+
+CREATE INDEX idx_products_company_id ON products (company_id);
 
 CREATE TABLE product_price (
     product_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    price DECIMAL(10, 2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
 
     CONSTRAINT fk_product_price_product
         FOREIGN KEY (product_id)
         REFERENCES products(id)
         ON DELETE CASCADE
 );
+
+CREATE INDEX idx_product_price_product_id ON product_price (product_id);
 
 CREATE TABLE customers (
     company_id INTEGER NOT NULL,
@@ -90,18 +101,24 @@ CREATE TABLE customers (
     CONSTRAINT fk_customers_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
 
     CONSTRAINT chk_customers_document_number_format
         CHECK (
             document_number ~ '^[0-9]+$'
             AND char_length(document_number) IN (11, 14)
-        )
+        ),
+
+    CONSTRAINT uq_customers_company_document UNIQUE (company_id, document_number)
 );
+
+CREATE INDEX idx_customers_company_id ON customers (company_id);
 
 CREATE TABLE contact_type (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    description VARCHAR(50) NOT NULL
+    description VARCHAR(50) NOT NULL,
+
+    CONSTRAINT uq_contact_type_description UNIQUE (description)
 );
 
 CREATE TABLE customer_contact (
@@ -118,42 +135,49 @@ CREATE TABLE customer_contact (
     CONSTRAINT fk_customer_contact_type
         FOREIGN KEY (contact_type_id)
         REFERENCES contact_type(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
 );
+
+CREATE INDEX idx_customer_contact_customer_id ON customer_contact (customer_id);
 
 CREATE TABLE invoices (
     company_id INTEGER NOT NULL,
     customer_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     invoice_date TIMESTAMPTZ NOT NULL,
-    total_amount DECIMAL(12,2),
+    total_amount DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (total_amount >= 0),
 
     CONSTRAINT fk_invoices_company
         FOREIGN KEY (company_id)
-        REFERENCES companies (id),
+        REFERENCES companies (id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_invoices_customer
         FOREIGN KEY (customer_id)
         REFERENCES customers (id)
+        ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_invoices_company_id ON invoices (company_id);
 CREATE INDEX idx_invoices_customer_id ON invoices (customer_id);
+CREATE INDEX idx_invoices_company_date ON invoices (company_id, invoice_date DESC);
 
 CREATE TABLE invoice_items (
     invoice_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    price DECIMAL(10,2) NOT NULL,
-    quantity INTEGER NOT NULL,
+    price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
+    quantity INTEGER NOT NULL CHECK (quantity >= 0),
 
     CONSTRAINT fk_invoice_items_invoice
         FOREIGN KEY (invoice_id)
-        REFERENCES invoices (id),
+        REFERENCES invoices (id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_invoice_items_product
         FOREIGN KEY (product_id)
-        REFERENCES products (id),
+        REFERENCES products (id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT uq_invoice_items_invoice_product
         UNIQUE (invoice_id, product_id)
@@ -171,14 +195,18 @@ CREATE TABLE suppliers (
     CONSTRAINT fk_suppliers_company
         FOREIGN KEY (company_id)
         REFERENCES companies(id)
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
 
     CONSTRAINT chk_supplier_document_number_format
         CHECK (
             document_number ~ '^[0-9]+$'
             AND char_length(document_number) IN (11, 14)
-        )
+        ),
+
+    CONSTRAINT uq_suppliers_company_document UNIQUE (company_id, document_number)
 );
+
+CREATE INDEX idx_suppliers_company_id ON suppliers (company_id);
 
 CREATE TABLE purchases (
     company_id INTEGER NOT NULL,
@@ -190,15 +218,17 @@ CREATE TABLE purchases (
     document_key VARCHAR(44),
     purchase_date TIMESTAMPTZ NOT NULL,
     purchase_entry_date TIMESTAMPTZ NOT NULL,
-    total_amount DECIMAL(12,2),
+    total_amount DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (total_amount >= 0),
 
     CONSTRAINT fk_purchases_company
         FOREIGN KEY (company_id)
-        REFERENCES companies (id),
+        REFERENCES companies (id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_purchases_supplier
         FOREIGN KEY (supplier_id)
-        REFERENCES suppliers (id),
+        REFERENCES suppliers (id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT uq_purchases_document_key
         UNIQUE (document_key),
@@ -209,47 +239,50 @@ CREATE TABLE purchases (
 
 CREATE INDEX idx_purchases_company_id ON purchases (company_id);
 CREATE INDEX idx_purchases_supplier_id ON purchases (supplier_id);
+CREATE INDEX idx_purchases_company_date ON purchases (company_id, purchase_date DESC);
 
 CREATE TABLE purchase_items (
     purchase_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    price DECIMAL(10,2) NOT NULL,
-    package INTEGER NOT NULL,
-    quantity INTEGER NOT NULL,
-    shipping_cost DECIMAL(10,2) NOT NULL,
+    price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
+    package INTEGER NOT NULL CHECK (package >= 0),
+    quantity INTEGER NOT NULL CHECK (quantity >= 0),
+    shipping_cost DECIMAL(10,2) NOT NULL CHECK (shipping_cost >= 0),
 
     CONSTRAINT fk_purchase_items_purchase
         FOREIGN KEY (purchase_id)
-        REFERENCES purchases (id),
+        REFERENCES purchases (id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_purchase_items_product
         FOREIGN KEY (product_id)
-        REFERENCES products (id),
+        REFERENCES products (id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT uq_purchase_items_purchase_product
         UNIQUE (purchase_id, product_id)
 );
 
-CREATE INDEX idx_purchase_items_invoice_id ON purchase_items (purchase_id);
+CREATE INDEX idx_purchase_items_purchase_id ON purchase_items (purchase_id);
 CREATE INDEX idx_purchase_items_product_id ON purchase_items (product_id);
 
 CREATE TABLE product_movements (
     product_id INTEGER NOT NULL,
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     movement_type SMALLINT NOT NULL,
-    quantity INTEGER NOT NULL,
-    price NUMERIC(10, 2) NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity >= 0),
+    price NUMERIC(10, 2) NOT NULL CHECK (price >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     CONSTRAINT fk_product_movements
         FOREIGN KEY (product_id)
         REFERENCES products(id)
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
 
     CONSTRAINT chk_product_movements_type
-    CHECK (movement_type IN (1, 2, 3))
+        CHECK (movement_type IN (1, 2, 3))
 );
 
 CREATE INDEX idx_product_movements_product_date
-ON product_movements (product_id, created_at DESC);
+    ON product_movements (product_id, created_at DESC);

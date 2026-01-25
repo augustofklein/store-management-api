@@ -70,6 +70,12 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                .WithMany(c => c.Purchases)
                .HasForeignKey(c => c.SupplierId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(p => p.CompanyId)
+                .HasDatabaseName("idx_purchases_company_id");
+            
+            builder.HasIndex(p => p.SupplierId)
+                .HasDatabaseName("idx_purchases_supplier_id");
         }
     }
 }

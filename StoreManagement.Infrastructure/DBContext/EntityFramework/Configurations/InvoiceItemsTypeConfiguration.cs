@@ -39,12 +39,21 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.HasOne(c => c.Invoice)
                .WithMany(c => c.InvoiceItems)
                .HasForeignKey(c => c.InvoiceId)
-               .OnDelete(DeleteBehavior.Restrict);
+               .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(c => c.Product)
                .WithMany(c => c.InvoiceItems)
                .HasForeignKey(c => c.ProductId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(ii => ii.InvoiceId)
+                .HasDatabaseName("idx_invoice_items_invoice_id");
+            
+            builder.HasIndex(ii => ii.ProductId)
+                .HasDatabaseName("idx_invoice_items_product_id");
+            
+            builder.HasIndex(ii => new { ii.InvoiceId, ii.ProductId })
+                .IsUnique();
         }
     }
 }

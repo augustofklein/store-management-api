@@ -18,17 +18,17 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
 
             builder.Property(uc => uc.CompanyId)
                 .HasColumnName("company_id")
-                .HasColumnType("int")
+                .HasColumnType("integer")
                 .IsRequired();
 
             builder.Property(uc => uc.UserId)
                 .HasColumnName("user_id")
-                .HasColumnType("int")
+                .HasColumnType("integer")
                 .IsRequired();
 
             builder.Property(uc => uc.RoleId)
                 .HasColumnName("role_id")
-                .HasColumnType("int")
+                .HasColumnType("integer")
                 .IsRequired();
 
             builder.Property(u => u.IsActive)
@@ -41,7 +41,6 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnType("timestamptz")
                 .IsRequired();
 
-            // TODO: Review the DeleteBehavior property
             builder.HasOne(uc => uc.Company)
                .WithMany(c => c.UserCompanies)
                .HasForeignKey(uc => uc.CompanyId)
@@ -56,6 +55,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .WithMany()
                 .HasForeignKey(uc => uc.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(uc => new { uc.CompanyId, uc.UserId })
+                .IsUnique();
         }
     }
 }

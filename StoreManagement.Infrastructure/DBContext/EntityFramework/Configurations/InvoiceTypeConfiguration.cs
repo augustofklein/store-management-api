@@ -45,6 +45,12 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                .WithMany(c => c.Invoices)
                .HasForeignKey(c => c.CustomerId)
                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(i => i.CompanyId)
+                .HasDatabaseName("idx_invoices_company_id");
+            
+            builder.HasIndex(i => i.CustomerId)
+                .HasDatabaseName("idx_invoices_customer_id");
         }
     }
 }

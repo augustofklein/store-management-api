@@ -11,10 +11,11 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
             builder.ToTable("product_price");
 
             builder.HasKey(pp => pp.Id);
-            
+
             builder.Property(pp => pp.Id)
                 .HasColumnName("id")
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .HasColumnType("integer");
             
             builder.Property(pp => pp.ProductId)
                 .HasColumnName("product_id")
@@ -29,6 +30,9 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                .WithOne(p => p.ProductPrice)
                .HasForeignKey<ProductPriceEntity>(p => p.ProductId)
                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(pp => pp.ProductId)
+                .HasDatabaseName("idx_product_price_product_id");
         }
     }
 }

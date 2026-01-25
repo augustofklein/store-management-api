@@ -29,6 +29,17 @@ namespace StoreManagement.Infrastructure.DBContext.EntityFramework.Configuration
                 .HasColumnName("name")
                 .HasColumnType("varchar(100)")
                 .IsRequired();
+
+            builder.HasOne(s => s.Company)
+                   .WithMany(c => c.Suppliers)
+                   .HasForeignKey(s => s.CompanyId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(s => s.CompanyId)
+                .HasDatabaseName("idx_suppliers_company_id");
+            
+            builder.HasIndex(s => new { s.CompanyId, s.DocumentNumber })
+                .IsUnique();
         }
     }
 }
