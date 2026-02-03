@@ -14,7 +14,7 @@ namespace StoreManagement.Application.Invoice.Handler
     {
         public async Task<Result> Handle(AddInvoiceCommand command, CancellationToken cancellationToken)
         {
-            var validation = await invoiceService.ValidateInvoiceProductsExists(command, cancellationToken);
+            var validation = await invoiceService.ValidateAddInvoiceAsync(command, cancellationToken);
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
@@ -28,7 +28,7 @@ namespace StoreManagement.Application.Invoice.Handler
                 if(updateStockResult.IsFailure)
                     return Result.Failure(updateStockResult.Error);
 
-                await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.INVOICE, command.InvoiceDate, mapper.Map<List<AddProductMovementDto>>(command.InvoiceItems), cancellationToken);
+                await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.INVOICE, mapper.Map<List<AddProductMovementDto>>(command.InvoiceItems), cancellationToken);
 
                 await eFTransactionManager.CommitAsync(cancellationToken);
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Purchase.Model;
+using StoreManagement.Common;
 using StoreManagement.Domain.Entities;
 using StoreManagement.Infrastructure.DBContext;
 
@@ -11,43 +12,52 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
     {
         public async Task<Result<IEnumerable<PurchaseDto>>> ReturnAllPuchasesAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            return await dbContext.Purchase
-                .Include(i => i.PurchaseItems)
-                    .ThenInclude(ii => ii.Product)
-                .Where(i => i.CompanyId == companyId)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(i => new PurchaseDto
-                {
-                    PurchaseId = i.Id,
-                    PurchaseDate = i.PurchaseDate,
-                    PurchaseEntryDate = i.PurchaseEntryDate,
-                    TotalAmount = i.TotalAmount,
-                    Document = new PurchaseDto.PurchaseDocument
+            try
+            {
+                var purchases = await dbContext.Purchase
+                    .Include(i => i.PurchaseItems)
+                        .ThenInclude(ii => ii.Product)
+                    .Where(i => i.CompanyId == companyId)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(i => new PurchaseDto
                     {
-                        DocumentNumber = i.DocumentNumber,
-                        DocumentSerie = i.DocumentSerie,
-                        DocumentMod = i.DocumentMod,
-                        DocumentKey = i.DocumentKey,
-                        DocumentDate = i.PurchaseDate
-                    },
-                    Supplier = new PurchaseDto.SupplierPurchase
-                    {
-                        Id = i.Supplier.Id,
-                        DocumentNumber = i.Supplier.DocumentNumber,
-                        Name = i.Supplier.Name,
-                    },
-                    Items = i.PurchaseItems.Select(ii => new PurchaseDto.PurchaseItem
-                    {
-                        ProductId = ii.ProductId,
-                        SkuId = ii.Product.SkuId,
-                        Barcode = ii.Product.Barcode,
-                        Description = ii.Product.Description,
-                        Price = ii.Price,
-                        Package = ii.Package,
-                        Quantity = ii.Quantity
-                    }).ToList()
-                }).ToListAsync(cancellationToken);
+                        PurchaseId = i.Id,
+                        PurchaseDate = i.PurchaseDate,
+                        PurchaseEntryDate = DateTimeUtils.ToBrazilTime(i.PurchaseEntryDate),
+                        TotalAmount = i.TotalAmount,
+                        Document = new PurchaseDto.PurchaseDocument
+                        {
+                            DocumentNumber = i.DocumentNumber,
+                            DocumentSerie = i.DocumentSerie,
+                            DocumentMod = i.DocumentMod,
+                            DocumentKey = i.DocumentKey,
+                            DocumentDate = i.PurchaseDate
+                        },
+                        Supplier = new PurchaseDto.SupplierPurchase
+                        {
+                            Id = i.Supplier.Id,
+                            DocumentNumber = i.Supplier.DocumentNumber,
+                            Name = i.Supplier.Name,
+                        },
+                        Items = i.PurchaseItems.Select(ii => new PurchaseDto.PurchaseItem
+                        {
+                            ProductId = ii.ProductId,
+                            SkuId = ii.Product.SkuId,
+                            Barcode = ii.Product.Barcode,
+                            Description = ii.Product.Description,
+                            Price = ii.Price,
+                            Package = ii.Package,
+                            Quantity = ii.Quantity
+                        }).ToList()
+                    }).ToListAsync(cancellationToken);
+
+                return Result.Success<IEnumerable<PurchaseDto>>(purchases);
+            }
+            catch(Exception ex)
+            {
+                return Result.Failure<IEnumerable<PurchaseDto>>($"Error retrieving purchases: {ex.Message}");
+            }
         }
 
         public async Task<bool> ValidateExistsPurchaseByDocumentKey(int companyId, string documentId, CancellationToken cancellationToken)
@@ -67,7 +77,7 @@ namespace StoreManagement.Infrastructure.Repository.Purchase
                 DocumentMod = purchase.Document.DocumentMod,
                 DocumentKey = purchase.Document.DocumentKey,
                 PurchaseDate = purchase.Document.DocumentDate,
-                PurchaseEntryDate = purchase.PurchaseEntryDate,
+                PurchaseEntryDate = DateTimeOffset.UtcNow,
                 TotalAmount = purchase.Products.Sum(i => i.Price * i.Quantity),
                 PurchaseItems = [.. purchase.Products.Select(i => new PurchaseItemEntity
                 {

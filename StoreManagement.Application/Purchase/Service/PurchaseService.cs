@@ -2,6 +2,7 @@
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Purchase.Command;
 using StoreManagement.Application.Purchase.Model;
+using StoreManagement.Common;
 
 namespace StoreManagement.Application.Purchase.Service
 {
@@ -57,10 +58,10 @@ namespace StoreManagement.Application.Purchase.Service
 
         public async Task<Result> ValidateAddPurchaseAsync(AddPurchaseCommand command, CancellationToken cancellationToken)
         {
-            if(command.Document.DocumentDate > DateTimeOffset.Now.DateTime)
-                return Result.Failure("Purchase entry date cannot be in the future.");
+            if (command.Document.DocumentDate > DateTimeUtils.NowInBrazil())
+                return Result.Failure("Document date cannot be in the future.");
 
-            if(await purchaseRepository.ValidateExistsPurchaseByDocumentKey(command.CompanyId, command.Document.DocumentKey, cancellationToken))
+            if (await purchaseRepository.ValidateExistsPurchaseByDocumentKey(command.CompanyId, command.Document.DocumentKey, cancellationToken))
                 return Result.Failure($"A purchase with document key {command.Document.DocumentKey} already exists.");
 
             if (!await supplierRepository.ValidateSupplierExistsByIdAsync(command.CompanyId, command.SupplierId, cancellationToken))

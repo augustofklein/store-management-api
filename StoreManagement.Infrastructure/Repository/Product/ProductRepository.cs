@@ -157,7 +157,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task AddProductMovementArrayAsync(ProductMovementEnum movementType, DateTimeOffset movementDate, List<AddProductMovementDto> items, CancellationToken cancellationToken)
+        public async Task AddProductMovementArrayAsync(ProductMovementEnum movementType, List<AddProductMovementDto> items, CancellationToken cancellationToken)
         {
             var productMovements = items.Select(ii => new ProductMovementEntity
             {
@@ -165,7 +165,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 MovementType = movementType,
                 Quantity = ii.Quantity,
                 Price = ii.Price,
-                CreatedAt = movementDate
+                CreatedAt = DateTimeOffset.UtcNow
             });
 
             await dbContext.ProductMovements.AddRangeAsync(productMovements, cancellationToken);

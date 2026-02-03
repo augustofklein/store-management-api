@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StoreManagement.Application.Contracts.Persistence;
 using StoreManagement.Application.Invoice.Model;
+using StoreManagement.Common;
 using StoreManagement.Domain.Entities;
 using StoreManagement.Infrastructure.DBContext;
 
@@ -11,34 +12,43 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
     {
         public async Task<Result<IEnumerable<InvoiceDto>>> ReturnAllInvoicesAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            return await dbContext.Invoice
-                .Include(i => i.InvoiceItems)
-                    .ThenInclude(ii => ii.Product)
-                .Where(i => i.CompanyId == companyId)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(i => new InvoiceDto
-                {
-                    InvoiceId = i.Id,
-                    InvoiceDate = i.InvoiceDate,
-                    TotalAmount = i.TotalAmount,
-                    Customer = new InvoiceDto.CustomerInvoice
+            try
+            {
+                var invoices = await dbContext.Invoice
+                    .Include(i => i.InvoiceItems)
+                        .ThenInclude(ii => ii.Product)
+                    .Where(i => i.CompanyId == companyId)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(i => new InvoiceDto
                     {
-                        Id = i.Customer.Id,
-                        DocumentNumber = i.Customer.DocumentNumber,
-                        Name = i.Customer.Name,
-                        Address = i.Customer.Address
-                    },
-                    Items = i.InvoiceItems.Select(ii => new InvoiceDto.InvoiceItem
-                    {
-                        ProductId = ii.ProductId,
-                        SkuId = ii.Product.SkuId,
-                        Barcode = ii.Product.Barcode,
-                        Description = ii.Product.Description,
-                        Price = ii.Price,
-                        Quantity = ii.Quantity
-                    }).ToList()
-                }).ToListAsync(cancellationToken);
+                        InvoiceId = i.Id,
+                        InvoiceDate = DateTimeUtils.ToBrazilTime(i.InvoiceDate),
+                        TotalAmount = i.TotalAmount,
+                        Customer = new InvoiceDto.CustomerInvoice
+                        {
+                            Id = i.Customer.Id,
+                            DocumentNumber = i.Customer.DocumentNumber,
+                            Name = i.Customer.Name,
+                            Address = i.Customer.Address
+                        },
+                        Items = i.InvoiceItems.Select(ii => new InvoiceDto.InvoiceItem
+                        {
+                            ProductId = ii.ProductId,
+                            SkuId = ii.Product.SkuId,
+                            Barcode = ii.Product.Barcode,
+                            Description = ii.Product.Description,
+                            Price = ii.Price,
+                            Quantity = ii.Quantity
+                        }).ToList()
+                    }).ToListAsync(cancellationToken);
+
+                return Result.Success<IEnumerable<InvoiceDto>>(invoices);
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<IEnumerable<InvoiceDto>>($"An error occurred while retrieving invoices: {ex.Message}");
+            }
         }
 
         public async Task AddInvoiceAsync(AddInvoiceDto invoice, CancellationToken cancellationToken)
@@ -47,7 +57,7 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
             {
                 CompanyId = invoice.CompanyId,
                 CustomerId = invoice.CustomerId,
-                InvoiceDate = invoice.InvoiceDate,
+                InvoiceDate = DateTimeOffset.UtcNow,
                 TotalAmount = invoice.InvoiceItems.Sum(p =>
                 {
                     return p.Price * p.Quantity;

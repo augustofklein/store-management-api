@@ -5,6 +5,6 @@ namespace StoreManagement.Application.Invoice.Service
 {
     public interface IInvoiceService
     {
-        Task<Result> ValidateInvoiceProductsExists(AddInvoiceCommand command, CancellationToken cancellationToken);
+        Task<Result> ValidateAddInvoiceAsync(AddInvoiceCommand command, CancellationToken cancellationToken);
     }
 }

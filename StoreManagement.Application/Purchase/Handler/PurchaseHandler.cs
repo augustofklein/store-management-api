@@ -54,7 +54,7 @@ namespace StoreManagement.Application.Purchase.Handler
                 if (productMovementResult.IsFailure)
                     return Result.Failure(productMovementResult.Error);
 
-                await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.PURCHASE, command.PurchaseEntryDate, mapper.Map<List<AddProductMovementDto>>(command.Products), cancellationToken);
+                await productRepository.AddProductMovementArrayAsync(ProductMovementEnum.PURCHASE, mapper.Map<List<AddProductMovementDto>>(command.Products), cancellationToken);
 
                 await eFTransactionManager.CommitAsync(cancellationToken);
             }

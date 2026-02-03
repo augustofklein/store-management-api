@@ -8,7 +8,7 @@ namespace StoreManagement.Application.Invoice.Service
 {
     public class InvoiceService(IProductRepository productRepository, ICustomerRepository customerRepository, IMapper mapper) : IInvoiceService
     {
-        public async Task<Result> ValidateInvoiceProductsExists(AddInvoiceCommand command, CancellationToken cancellationToken)
+        public async Task<Result> ValidateAddInvoiceAsync(AddInvoiceCommand command, CancellationToken cancellationToken)
         {
             if(command.InvoiceItems.Count == 0)
                 return Result.Failure("Invoice must contain at least one item.");
