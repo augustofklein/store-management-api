@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StoreManagement.Application.Auth.Model;
+using StoreManagement.Common.Constants;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -30,7 +31,7 @@ namespace StoreManagement.Application.Auth.Service
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, username),
-                new Claim("companyId", companyId.ToString()),
+                new Claim(HttpHeadersConstants.CompanyId, companyId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Name, username)
             };

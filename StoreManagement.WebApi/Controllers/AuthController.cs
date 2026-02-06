@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StoreManagement.Application.Auth.Command;
 using StoreManagement.Application.Contracts.Persistence;
+using StoreManagement.Common.Constants;
 using StoreManagement.WebApi.InputModel.User;
 using StoreManagement.WebApi.SwaggerConfiguration;
 using System.Text;
@@ -67,7 +68,7 @@ namespace StoreManagement.WebApi.Controllers
         private UserToken? ExtractBasicAuthWithCompanyCredentials()
         {
             var authHeader = Request.Headers.Authorization.FirstOrDefault();
-            var companyHeader = Request.Headers["CompanyId"].FirstOrDefault();
+            var companyHeader = Request.Headers[HttpHeadersConstants.CompanyId].FirstOrDefault();
 
             if (authHeader == null || !authHeader.StartsWith("Basic ") || companyHeader == null)
                 return null;

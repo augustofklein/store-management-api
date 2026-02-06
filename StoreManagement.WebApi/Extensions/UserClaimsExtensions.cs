@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using StoreManagement.Common.Constants;
+using System.Security.Claims;
 
 namespace StoreManagement.WebApi.Extensions
 {
@@ -7,7 +8,7 @@ namespace StoreManagement.WebApi.Extensions
         public static int GetCompanyId(this ClaimsPrincipal user)
         {
             // TODO: Add error handling
-            var companyIdStr = user.FindFirst("companyId")?.Value;
+            var companyIdStr = user.FindFirst(HttpHeadersConstants.CompanyId)?.Value;
             return int.Parse(companyIdStr);
         }
     }

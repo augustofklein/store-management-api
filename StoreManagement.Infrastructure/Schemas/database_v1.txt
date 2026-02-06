@@ -278,7 +278,7 @@ CREATE TABLE product_movements (
     CONSTRAINT fk_product_movements
         FOREIGN KEY (product_id)
         REFERENCES products(id)
-        ON DELETE RESTRICT,
+        ON DELETE CASCADE,
 
     CONSTRAINT chk_product_movements_type
         CHECK (movement_type IN (1, 2, 3))
