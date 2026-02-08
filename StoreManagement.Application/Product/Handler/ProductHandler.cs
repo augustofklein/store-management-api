@@ -43,7 +43,7 @@ namespace StoreManagement.Application.Product.Handler
             if (validation.IsFailure)
                 return Result.Failure(validation.Error);
 
-            var result = await productRepository.EditProductAsync(command.CompanyId, command.Id, command.Status, command.Description, cancellationToken);
+            var result = await productRepository.EditProductAsync(command.CompanyId, command.Id, command.Status, command.Description, command.Price, cancellationToken);
             if(result.IsFailure)
                 return Result.Failure(result.Error);
 

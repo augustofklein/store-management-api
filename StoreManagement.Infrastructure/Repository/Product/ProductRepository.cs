@@ -73,7 +73,7 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task<Result> EditProductAsync(int companyId, int id, bool status, string description, CancellationToken cancellationToken)
+        public async Task<Result> EditProductAsync(int companyId, int id, bool status, string description, decimal price, CancellationToken cancellationToken)
         {
             var product = await dbContext.Products
                 .FirstOrDefaultAsync(
@@ -86,8 +86,17 @@ namespace StoreManagement.Infrastructure.Repository.Product
                 return Result.Failure($"Product with ID {id} not found.");
             }
 
+            var productPrice = await dbContext.ProductPrice
+                .FirstOrDefaultAsync(pp => pp.ProductId == product.Id, cancellationToken);
+
+            if (productPrice == null)
+            {
+                return Result.Failure($"Product price with ID {id} not found.");
+            }
+
             product.Description = description;
             product.Status = status;
+            productPrice.Price = price;
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
