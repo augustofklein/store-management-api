@@ -103,10 +103,15 @@ namespace StoreManagement.Infrastructure.Repository.Product
             return Result.Success();
         }
 
-        public async Task<Result<IEnumerable<ProductDto>>> GetProductsAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<Result<ProductPagedResultDto>> GetProductsAsync(int companyId, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            return await dbContext.Products
-                .Where(p => p.CompanyId == companyId)
+            var query = dbContext.Products
+                .Where(p => p.CompanyId == companyId);
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderBy(p => p.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(p => new ProductDto
@@ -120,6 +125,19 @@ namespace StoreManagement.Infrastructure.Repository.Product
                     Price = p.ProductPrice.Price
                 })
                 .ToListAsync(cancellationToken);
+
+            var totalPages = pageSize <= 0 ? 0 : (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var result = new ProductPagedResultDto
+            {
+                Items = items,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            return Result.Success(result);
         }
 
         public async Task<bool> VerifyProductByIdExistAsync(int companyId, int id, CancellationToken cancellationToken)
