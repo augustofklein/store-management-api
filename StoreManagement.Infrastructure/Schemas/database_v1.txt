@@ -286,3 +286,38 @@ CREATE TABLE product_movements (
 
 CREATE INDEX idx_product_movements_product_date
     ON product_movements (product_id, created_at DESC);
+
+CREATE TABLE payment_types (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    description VARCHAR(50) NOT NULL,
+
+    CONSTRAINT uq_payment_types_description UNIQUE (description)
+);
+
+CREATE TABLE invoice_payments (
+    invoice_id INTEGER NOT NULL,
+    payment_type_id INTEGER NOT NULL,
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    amount DECIMAL(12,2) NOT NULL CHECK (amount > 0),
+    payment_date TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT fk_invoice_payments_invoice
+        FOREIGN KEY (invoice_id)
+        REFERENCES invoices (id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_invoice_payments_payment_type
+        FOREIGN KEY (payment_type_id)
+        REFERENCES payment_types (id)
+        ON DELETE RESTRICT
+);
+
+CREATE INDEX idx_invoice_payments_invoice_id ON invoice_payments (invoice_id);
+CREATE INDEX idx_invoice_payments_payment_type_id ON invoice_payments (payment_type_id);
+CREATE INDEX idx_invoice_payments_date ON invoice_payments (payment_date DESC);
+
+INSERT INTO payment_types (description) VALUES
+('Cash'),
+('PIX'),
+('Credit Card'),
+('Debit Card');
