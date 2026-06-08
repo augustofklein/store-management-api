@@ -6,7 +6,7 @@ using StoreManagement.Application.Product.Model;
 
 namespace StoreManagement.Application.Invoice.Service
 {
-    public class InvoiceService(IProductRepository productRepository, ICustomerRepository customerRepository, IMapper mapper) : IInvoiceService
+    public class InvoiceService(IInvoiceRepository invoiceRepository, IProductRepository productRepository, ICustomerRepository customerRepository, IMapper mapper) : IInvoiceService
     {
         public async Task<Result> ValidateAddInvoiceAsync(AddInvoiceCommand command, CancellationToken cancellationToken)
         {
@@ -23,6 +23,9 @@ namespace StoreManagement.Application.Invoice.Service
             var validateStockAvailability = await productRepository.ValidateInvoiceProductsStockAsync(command.CompanyId, mapper.Map<List<ProductStockDto>>(command.InvoiceItems), cancellationToken);
             if(validateStockAvailability.IsFailure)
                 return Result.Failure(validateStockAvailability.Error);
+
+            if(!await invoiceRepository.VerifyPaymentsIdExistAsync(command.CompanyId, [.. command.Payments.Select(x => x.PaymentTypeId)], cancellationToken))
+                return Result.Failure("One or more payment types do not exist.");
 
             return Result.Success();
         }

@@ -67,10 +67,24 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
                     ProductId = ii.ProductId,
                     Price = ii.Price,
                     Quantity = ii.Quantity
+                })],
+                InvoicePayments = [.. invoice.InvoicePayments.Select(p => new IncoicePaymentsEntity
+                {
+                    PaymentTypeId = p.PaymentTypeId,
+                    Amount = p.Amount
                 })]
             };
 
             await dbContext.Invoice.AddAsync(invoiceEntity, cancellationToken);
+        }
+
+        public async Task<bool> VerifyPaymentsIdExistAsync(int companyId, IEnumerable<int> paymentsId, CancellationToken cancellationToken)
+        {
+            var existingPaymentsCount = await dbContext.PaymentTypes
+                .Where(p => p.CompanyId == companyId && paymentsId.Contains(p.Id))
+                .CountAsync(cancellationToken);
+
+            return existingPaymentsCount == paymentsId.Count();
         }
     }
 }

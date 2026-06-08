@@ -16,6 +16,9 @@ namespace StoreManagement.Application.Validations.Invoice
             RuleForEach(x => x.InvoiceItems)
                 .SetValidator(new AddInvoiceItemsDtoValidator());
 
+            RuleForEach(x => x.Payments)
+                .SetValidator(new AddInvoicePaymentDtoValidator());
+
         }
     }
 }

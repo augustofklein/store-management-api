@@ -13,5 +13,6 @@ namespace StoreManagement.Domain.Entities
         public virtual CompanyEntity Company { get; set; } = null!;
         public virtual CustomerEntity Customer { get; set; } = null!;
         public ICollection<InvoiceItemEntity> InvoiceItems { get; set; } = [];
+        public ICollection<IncoicePaymentsEntity> InvoicePayments { get; set; } = [];
     }
 }
