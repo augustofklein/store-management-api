@@ -7,6 +7,7 @@
         public decimal TotalAmount { get; set; }
         public required CustomerInvoice Customer { get; set; }
         public List<InvoiceItem> Items { get; set; } = [];
+        public List<InvoicePayment> Payments { get; set; } = [];
 
         public class InvoiceItem
         {
@@ -24,6 +25,13 @@
             public string DocumentNumber { get; set; } = string.Empty;
             public string Name { get; set; } = string.Empty;
             public string Address { get; set; } = string.Empty;
+        }
+
+        public class InvoicePayment
+        {
+            public int PaymentTypeId { get; set; }
+            public decimal Amount { get; set; }
+            public DateTimeOffset PaymentDate { get; set; }
         }
     }
 }

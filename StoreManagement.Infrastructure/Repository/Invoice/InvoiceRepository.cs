@@ -40,6 +40,12 @@ namespace StoreManagement.Infrastructure.Repository.Invoice
                             Description = ii.Product.Description,
                             Price = ii.Price,
                             Quantity = ii.Quantity
+                        }).ToList(),
+                        Payments = i.InvoicePayments.Select(p => new InvoiceDto.InvoicePayment
+                        {
+                            PaymentTypeId = p.PaymentTypeId,
+                            Amount = p.Amount,
+                            PaymentDate = DateTimeUtils.ToBrazilTime(p.PaymentDate)
                         }).ToList()
                     }).ToListAsync(cancellationToken);
 
